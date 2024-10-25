@@ -1,3 +1,7 @@
+root, html, body {
+  width: 100%;
+}
+
 .monthHeader {
   background-color: aqua !important;
   font-weight: bold;

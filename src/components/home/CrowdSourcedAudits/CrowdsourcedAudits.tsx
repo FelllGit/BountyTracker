@@ -133,9 +133,9 @@ const CrowdsourcedAudits = () => {
             placeholder="Languages"
             value={languages}
             onChange={setLanguages}
-            className="flex-1"
+            className="md:flex-1 w-full"
           />
-          <div className="relative w-56">
+          <div className="relative w-1/2 md:w-56">
             <Icon
               name="SquareFunction"
               className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
@@ -154,6 +154,7 @@ const CrowdsourcedAudits = () => {
             setEndDate={setEndDate}
             setStartDate={setStartDate}
             mode="range"
+            className="md:w-56 flex-1"
           />
           <Select
             value={status?.valueOf() || ""}
@@ -164,7 +165,7 @@ const CrowdsourcedAudits = () => {
               setStatus(projectStatus);
             }}
           >
-            <SelectTrigger className="flex gap-4 !text-grey-500 h-10 w-40">
+            <SelectTrigger className="flex gap-4 !text-grey-500 h-10 w-1/2 md:w-40">
               <div className="flex items-center gap-2">
                 <Icon name="TrendingUp" className="h-fit w-fit" color="grey" />
                 <SelectValue placeholder="Status" />
@@ -190,7 +191,7 @@ const CrowdsourcedAudits = () => {
               </Button>
             </SelectContent>
           </Select>
-          <div className="relative w-36">
+          <div className="relative flex-1 md:w-36">
             <Icon
               name="HandCoins"
               className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"

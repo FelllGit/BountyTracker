@@ -23,10 +23,10 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     return <div>No data</div>;
   }
 
-  const isMobile = useMediaQuery({ maxWidth: 767 }); // для мобільних
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 }); // для планшетів
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });
 
-  const sidebarWidth = isMobile ? 60 : isTablet ? 100 : 150; // Задаємо ширину в залежності від розміру екрану
+  const sidebarWidth = isMobile ? 60 : isTablet ? 100 : 150;
 
   const startOfMonth = moment().startOf("month");
   const endOfMonth = moment()
@@ -50,7 +50,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
 
   const groupColors: Record<number, string> = groups.reduce(
     (acc: Record<number, string>, group: TimelineGroupBase, index: number) => {
-      // Переконайтесь, що group.id є числом
       if (typeof group.id === "number") {
         acc[group.id] = colors[index % colors.length];
       }
@@ -64,7 +63,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         const groupId =
           groups.find((group) => group.title === project.platform)?.id ?? 0;
 
-        // Переконуємося, що groupId є числом
         const validatedGroupId: number =
           typeof groupId === "number" ? groupId : 0;
 
@@ -104,7 +102,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
       sidebarWidth={sidebarWidth}
     >
       <CustomMarker date={moment().toDate()}>
-        {/* custom renderer for this marker */}
         {({ styles }) => {
           const customStyles = {
             ...styles,
@@ -115,7 +112,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         }}
       </CustomMarker>
       <TimelineHeaders className="!bg-transparent">
-        {/* Вторинний заголовок для днів тижня */}
         <DateHeader unit="month" className="*:!bg-white" />
         <DateHeader
           unit="day"

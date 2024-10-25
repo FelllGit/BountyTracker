@@ -124,7 +124,7 @@ const BugBountyTable = () => {
           setStartDate={setStartDate}
           mode="single"
         />
-        <div className="relative w-36">
+        <div className="relative flex-1 md:w-36">
           <Icon
             name="HandCoins"
             className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"

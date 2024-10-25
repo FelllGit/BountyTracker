@@ -20,6 +20,7 @@ interface DatePickerProps {
   setStartDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setEndDate?: React.Dispatch<React.SetStateAction<Date | undefined>>;
   mode?: "range" | "single";
+  className?: string;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -28,6 +29,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   setStartDate,
   setEndDate,
   mode = "range",
+  className,
 }) => {
   const setDate = (range: DateRange | undefined) => {
     if (range && setEndDate) {
@@ -52,7 +54,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal h-10 w-56",
-            (!startDate || !endDate) && "text-muted-foreground"
+            (!startDate || !endDate) && "text-muted-foreground",
+            className
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4 scale-125" color="grey" />
