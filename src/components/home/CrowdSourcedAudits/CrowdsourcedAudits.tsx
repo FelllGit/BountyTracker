@@ -205,15 +205,13 @@ const CrowdsourcedAudits = () => {
             />
           </div>
         </div>
-        {!isLoading ||
-          !error ||
-          (projectsData && (
-            <ExportButton
-              imgRef={imgRef}
-              watermarkRef={watermarkRef}
-              chartHeight={chartHeight}
-            />
-          ))}
+        {(!isLoading || !error) && projectsData && (
+          <ExportButton
+            imgRef={imgRef}
+            watermarkRef={watermarkRef}
+            chartHeight={chartHeight}
+          />
+        )}
         <div ref={imgRef} className="relative flex flex-col">
           <div ref={chartRef}>
             <GanttChart
