@@ -83,15 +83,11 @@ const BugBountyTable = () => {
     setMaxReward(newMaxReward || undefined); // використай undefined для уникнення помилки з пустим значенням
   };
 
-  if (isError) {
-    return <div>Error: {error.message}</div>;
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-bold">Explore Bug Bounty Programs</h1>
-      <div className="flex gap-2">
-        <div className="relative w-56">
+      <div className="flex flex-wrap xl:flex-nowrap gap-2">
+        <div className="relative md:w-56 w-full">
           <Icon
             name="Search"
             className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
@@ -144,11 +140,16 @@ const BugBountyTable = () => {
           />
         </div>
       </div>
-      <DataTable
-        columns={bugBountyTableColumns}
-        data={displayedData}
-        isLoading={isLoading}
-      />
+      {error ? (
+        <p>Error: {error.message}</p>
+      ) : (
+        <DataTable
+          columns={bugBountyTableColumns}
+          data={displayedData}
+          isLoading={isLoading}
+        />
+      )}
+
       {!isLoading &&
         bugBounties &&
         displayedData.length < bugBounties.length && (

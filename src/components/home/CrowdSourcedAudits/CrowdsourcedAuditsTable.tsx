@@ -105,9 +105,8 @@ const CrowdsourcedAuditsTable = () => {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-3xl font-bold">Explore Crowdsourced Audits Table</p>
-      <div className="flex gap-2">
-        {/* Фільтри для таблиці */}
-        <div className="relative w-56">
+      <div className="flex flex-wrap xl:flex-nowrap gap-2">
+        <div className="relative md:w-56 w-full">
           <Icon
             name="Search"
             className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
