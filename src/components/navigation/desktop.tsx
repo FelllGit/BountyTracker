@@ -27,9 +27,9 @@ const DesktopNavigation = () => {
       </div>
 
       <div className="flex gap-4">
-        <Button variant="secondary" className="font-bold">
-          Email Subscription
-        </Button>
+        {/*<Button variant="secondary" className="font-bold">*/}
+        {/*  Email Subscription*/}
+        {/*</Button>*/}
         <Button
           variant="ghost"
           className="font-bold text-3xl"

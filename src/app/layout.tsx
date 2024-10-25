@@ -55,7 +55,7 @@ export default function RootLayout({
           <main className="max-w-full flex-grow flex flex-col p-10 px-20 xl:px-44 mt-16">
             {children}
           </main>
-          <Footer />
+          {/*<Footer />*/}
         </Providers>
       </body>
     </html>

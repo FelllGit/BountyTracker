@@ -56,9 +56,9 @@ const MobileNavigation = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            <Button variant="secondary" className="font-bold">
-              Email Subscription
-            </Button>
+            {/*<Button variant="secondary" className="font-bold">*/}
+            {/*  Email Subscription*/}
+            {/*</Button>*/}
             <div className="flex justify-around">
               <Button
                 variant="ghost"
