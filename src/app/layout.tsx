@@ -5,7 +5,6 @@ import "./app.css";
 import Header from "@/app/header";
 import Footer from "@/app/footer";
 import { Providers } from "@/app/providers";
-import image from "@/media/img/VigilSeek_logo.png";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
