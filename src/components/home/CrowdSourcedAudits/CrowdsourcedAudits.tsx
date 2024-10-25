@@ -76,8 +76,9 @@ const CrowdsourcedAudits = () => {
   const handleMaxRewardChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (isNaN(Number(event.target.value))) setMaxReward(undefined);
-    setMaxReward(Number(event.target.value));
+    const value = event.target.value;
+    if (+value < 0) setMaxReward(undefined);
+    setMaxReward(value === "" ? undefined : Number(value));
   };
 
   return (

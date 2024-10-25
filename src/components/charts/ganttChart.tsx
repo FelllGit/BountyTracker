@@ -32,7 +32,7 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
   const endOfMonth = moment()
     .endOf("month")
     .subtract(1, "week")
-    .add(14, "days");
+    .add(isMobile ? 0 : isTablet ? 5 : 10, "days");
 
   const allPlatforms =
     projectsData &&

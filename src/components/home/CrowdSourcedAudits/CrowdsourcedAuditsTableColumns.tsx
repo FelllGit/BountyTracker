@@ -141,7 +141,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("startDate"));
+      const date = new Date(row.getValue("endDate"));
       const formattedDate = date.toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",

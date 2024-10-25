@@ -1,5 +1,6 @@
 root, html, body {
   width: 100%;
+  min-height: -webkit-fill-available;
 }
 
 .monthHeader {
