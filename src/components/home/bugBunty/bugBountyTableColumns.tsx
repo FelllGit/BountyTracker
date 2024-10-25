@@ -147,6 +147,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   },
   {
     id: "actions",
+
     cell: ({ row }) => {
       const bugBounty = row.original;
       return (
