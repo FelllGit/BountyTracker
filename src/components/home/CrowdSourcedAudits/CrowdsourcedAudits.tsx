@@ -16,16 +16,15 @@ import GanttChart from "@/components/charts/ganttChart";
 import { useEffect, useRef, useState } from "react";
 import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
 import { format } from "date-fns";
-import { exportComponentAsJPEG } from "react-component-export-image";
 import { useGetW3SecurityContests } from "@/hooks/useGetW3SecurityContests";
 import image from "./../../../media/img/VigilSeek_logo.png";
+import ExportButton from "@/components/home/CrowdSourcedAudits/ExportButton";
 
 const CrowdsourcedAudits = () => {
   const imgRef = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartHeight, setChartHeight] = useState<number>(0);
-  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   const [languages, setLanguages] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
@@ -56,21 +55,6 @@ const CrowdsourcedAudits = () => {
     }
   }, [projectsData, isLoading, error]);
 
-  useEffect(() => {
-    if (!isExporting) return;
-
-    const exportImg = async () => {
-      if (chartHeight < 151) {
-        await exportComponentAsJPEG(watermarkRef);
-      } else {
-        await exportComponentAsJPEG(imgRef);
-      }
-      setIsExporting(false);
-    };
-
-    exportImg();
-  }, [isExporting, chartHeight]);
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
@@ -84,10 +68,6 @@ const CrowdsourcedAudits = () => {
   ) => {
     if (isNaN(Number(event.target.value))) setMaxReward(undefined);
     setMaxReward(Number(event.target.value));
-  };
-
-  const handleExport = () => {
-    setIsExporting(true);
   };
 
   return (
@@ -130,14 +110,12 @@ const CrowdsourcedAudits = () => {
           </div>
         </div>
       </div>
-
-      {/* Основний видимий компонент */}
       <div className="flex flex-col gap-4">
         <p className="text-3xl font-bold">
           Explore Crowdsourced Audits Timeline
         </p>
-        <div className="flex gap-2">
-          <div className="relative w-56">
+        <div className="flex flex-wrap xl:flex-nowrap gap-2">
+          <div className="relative md:w-56 w-full">
             <Icon
               name="Search"
               className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
@@ -227,7 +205,11 @@ const CrowdsourcedAudits = () => {
             />
           </div>
         </div>
-        <button onClick={handleExport}>Export As PNG</button>
+        <ExportButton
+          imgRef={imgRef}
+          watermarkRef={watermarkRef}
+          chartHeight={chartHeight}
+        />
         <div ref={imgRef} className="relative flex flex-col">
           <div ref={chartRef}>
             <GanttChart

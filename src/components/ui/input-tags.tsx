@@ -13,6 +13,7 @@ type InputTagsProps = Omit<InputProps, "value" | "onChange"> & {
 };
 
 const InputTags = React.forwardRef<HTMLInputElement, InputTagsProps>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ className, value, onChange, icon, ...props }, ref) => {
     const [pendingDataPoint, setPendingDataPoint] = useState("");
     const scrollContainerRef = useRef<HTMLDivElement>(null);

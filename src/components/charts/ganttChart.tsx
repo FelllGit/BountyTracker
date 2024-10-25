@@ -1,4 +1,5 @@
 "use client";
+
 import moment from "moment/moment";
 import Timeline, {
   TimelineGroupBase,
@@ -9,6 +10,7 @@ import Timeline, {
 } from "react-calendar-timeline";
 import "react-calendar-timeline/lib/Timeline.css";
 import { CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
+import { useMediaQuery } from "react-responsive";
 
 interface IGanttChartProps {
   projectsData: CrowdsourcedAudit[] | undefined;
@@ -20,6 +22,11 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
   if (!projectsData) {
     return <div>No data</div>;
   }
+
+  const isMobile = useMediaQuery({ maxWidth: 767 }); // для мобільних
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 }); // для планшетів
+
+  const sidebarWidth = isMobile ? 60 : isTablet ? 100 : 150; // Задаємо ширину в залежності від розміру екрану
 
   const startOfMonth = moment().startOf("month");
   const endOfMonth = moment()
@@ -94,6 +101,7 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
       defaultTimeStart={startOfMonth}
       defaultTimeEnd={endOfMonth}
       lineHeight={30}
+      sidebarWidth={sidebarWidth}
     >
       <CustomMarker date={moment().toDate()}>
         {/* custom renderer for this marker */}
