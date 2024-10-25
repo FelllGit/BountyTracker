@@ -50,10 +50,20 @@ const CrowdsourcedAudits = () => {
   );
 
   useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === chartRef.current) {
+          setChartHeight(entry.contentRect.height);
+        }
+      }
+    });
+
     if (chartRef.current) {
-      setChartHeight(chartRef.current.offsetHeight);
+      observer.observe(chartRef.current);
     }
-  }, [projectsData, isLoading, error]);
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
