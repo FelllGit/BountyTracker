@@ -27,7 +27,6 @@ const BugBountyTable = () => {
   const {
     data: bugBounties,
     isLoading,
-    isError,
     error,
   } = useGetW3BugBounties(
     search,
