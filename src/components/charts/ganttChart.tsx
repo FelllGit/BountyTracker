@@ -46,12 +46,17 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     stackItems: true,
   })) as TimelineGroupBase[];
 
-  const colors = ["#C7253E", "#88C273", "#4379F2", "#FFA6A6"];
+  const platformColors: Record<string, string> = {
+    HackenProof: "#871787", // світло-фіолетовий
+    Cantina: "#fa540a", // оранжевий
+    Immunefi: "#EB3678", // рожевий
+    Sherlock: "#240293", // темно-фіолетовий
+  };
 
   const groupColors: Record<number, string> = groups.reduce(
-    (acc: Record<number, string>, group: TimelineGroupBase, index: number) => {
-      if (typeof group.id === "number") {
-        acc[group.id] = colors[index % colors.length];
+    (acc: Record<number, string>, group: TimelineGroupBase) => {
+      if (typeof group.id === "number" && typeof group.title === "string") {
+        acc[group.id] = platformColors[group.title] || "#CCCCCC";
       }
       return acc;
     },

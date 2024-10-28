@@ -6,24 +6,6 @@ import Image from "next/image";
 import { BugBounty } from "@/interfaces/BugBounty";
 import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
 
-const formatCryptoAmount = (amount: number, token: string) => {
-  const formatted = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 0,
-  }).format(amount);
-  return `${formatted} ${token}`;
-};
-
-const formatAmount = (amount: number, token: string) => {
-  if (token === "USD") {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  }
-  return formatCryptoAmount(amount, token);
-};
-
 export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
   {
     accessorKey: "project",
@@ -44,9 +26,11 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 relative rounded-full overflow-hidden">
             <Image
-              src={imageUrl || "/api/placeholder/32/32"}
-              alt={row.getValue("project")}
-              fill
+              priority
+              src={imageUrl}
+              alt="Logo"
+              width="32"
+              height="32"
               className="object-cover"
             />
           </div>
@@ -183,8 +167,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
     },
     cell: ({ row }) => {
       const amount = row.getValue("maxReward") as number;
-      const token = row.original.rewardsToken;
-      return <div className="font-medium">{formatAmount(amount, token)}</div>;
+      return <div className="font-medium">${amount}</div>;
     },
   },
   {

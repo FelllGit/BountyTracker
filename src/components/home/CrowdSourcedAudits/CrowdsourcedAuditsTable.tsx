@@ -1,7 +1,6 @@
 "use client";
 import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
-import { InputTags } from "@/components/ui/input-tags";
 import DatePicker from "@/components/ui/date-picker";
 import {
   Select,
@@ -18,6 +17,16 @@ import { useGetW3SecurityContests } from "@/hooks/useGetW3SecurityContests";
 import { format } from "date-fns";
 import { DataTable } from "@/components/home/data-table";
 import { crowdsourcedAuditsTableColumns } from "@/components/home/CrowdSourcedAudits/CrowdsourcedAuditsTableColumns";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { extractUniquePlatforms } from "@/utils/platformUtils";
+import { extractUniqueLanguages } from "@/utils/languageUtils";
 
 const PAGE_SIZE = 20;
 
@@ -44,6 +53,20 @@ const CrowdsourcedAuditsTable = () => {
     status ?? undefined,
     maxReward
   );
+
+  const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
+  const [allLanguages, setAllLanguages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (
+      projectsData &&
+      allPlatforms.length === 0 &&
+      allLanguages.length === 0
+    ) {
+      setAllPlatforms(extractUniquePlatforms(projectsData));
+      setAllLanguages(extractUniqueLanguages(projectsData));
+    }
+  }, [projectsData, allPlatforms, allLanguages]);
 
   // Оновлення даних при зміні фільтрів або пошуку
   useEffect(() => {
@@ -91,10 +114,6 @@ const CrowdsourcedAuditsTable = () => {
     setSearch(event.target.value);
   };
 
-  const handlePlatformChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPlatform(event.target.value);
-  };
-
   const handleMaxRewardChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -119,33 +138,90 @@ const CrowdsourcedAuditsTable = () => {
             onChange={handleSearchChange}
           />
         </div>
-        <InputTags
-          icon="Code"
-          placeholder="Languages"
-          value={languages}
-          onChange={setLanguages}
-          className="md:flex-1 w-full"
-        />
-        <div className="relative w-1/2 md:w-56">
-          <Icon
-            name="SquareFunction"
-            className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
-          />
-          <Input
-            type="text"
-            placeholder="Search program"
-            className="pl-10 h-10"
-            value={platform}
-            onChange={handlePlatformChange}
-          />
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="h-10 flex-1">
+            <Button variant="outline" className="flex justify-between">
+              <div className="flex gap-2 items-center">
+                <Icon name="SquareFunction" color="grey" />
+                <p
+                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"}`}
+                >
+                  {languages.length > 0
+                    ? languages.join(", ")
+                    : "Select Languages"}{" "}
+                </p>
+              </div>
+              <Icon name="ChevronsUpDown" size={13} color="grey" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Languages</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {allLanguages.map((language) => {
+              const isChecked = languages.includes(language);
+
+              return (
+                <DropdownMenuCheckboxItem
+                  key={language}
+                  checked={isChecked}
+                  onCheckedChange={() => {
+                    setLanguages((currentLanguages) =>
+                      isChecked
+                        ? currentLanguages.filter((lang) => lang !== language)
+                        : [...currentLanguages, language]
+                    );
+                  }}
+                >
+                  {language}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Select
+          value={platform || ""}
+          onValueChange={(value) => {
+            const platformValue = Object.values(allPlatforms).find(
+              (platform) => platform === value
+            ) as string | null;
+            setPlatform(platformValue ?? ""); // provide a default value when platformValue is null
+          }}
+        >
+          <SelectTrigger className="flex gap-4 !text-grey-500 h-10 w-1/2 md:w-40">
+            <div
+              className={`flex items-center gap-2 ${!platform && "text-gray-500"}`}
+            >
+              <Icon name="Layers" className="h-fit w-fit" color="grey" />
+              <SelectValue placeholder="Platform" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            {Object.values(allPlatforms).map((platform) => (
+              <SelectItem key={platform} value={platform.valueOf()}>
+                {platform}
+              </SelectItem>
+            ))}
+            <SelectSeparator />
+            <Button
+              className="w-full px-2"
+              variant="secondary"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPlatform("");
+              }}
+            >
+              Clear
+            </Button>
+          </SelectContent>
+        </Select>
         <DatePicker
           startDate={startDate}
           endDate={endDate}
           setEndDate={setEndDate}
           setStartDate={setStartDate}
           mode="range"
-          className="flex-1 md:w-56"
+          className="md:w-56 flex-1"
         />
         <Select
           value={status?.valueOf() || ""}
@@ -157,7 +233,9 @@ const CrowdsourcedAuditsTable = () => {
           }}
         >
           <SelectTrigger className="flex gap-4 !text-grey-500 h-10 w-1/2 md:w-40">
-            <div className="flex items-center gap-2">
+            <div
+              className={`flex items-center gap-2 ${!status && "text-gray-500"}`}
+            >
               <Icon name="TrendingUp" className="h-fit w-fit" color="grey" />
               <SelectValue placeholder="Status" />
             </div>
