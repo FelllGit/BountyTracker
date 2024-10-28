@@ -166,14 +166,17 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
       );
     },
     cell: ({ row }) => {
-      const amount = row.getValue("maxReward") as number;
+      const amount = row.getValue("maxReward") as number | null; // враховуємо можливість null
       return (
         <div className="font-medium">
           $
-          {amount.toLocaleString("en-US", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}
+          {amount !== null
+            ? amount.toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+            : "N/A"}{" "}
+          {/* Відображаємо "N/A", якщо значення відсутнє */}
         </div>
       );
     },
