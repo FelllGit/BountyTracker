@@ -47,10 +47,10 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
   })) as TimelineGroupBase[];
 
   const platformColors: Record<string, string> = {
-    HackenProof: "#871787", // світло-фіолетовий
-    Cantina: "#fa540a", // оранжевий
-    Immunefi: "#EB3678", // рожевий
-    Sherlock: "#240293", // темно-фіолетовий
+    HackenProof: "#871787",
+    Cantina: "#fa540a",
+    Immunefi: "#EB3678",
+    Sherlock: "#240293",
   };
 
   const groupColors: Record<number, string> = groups.reduce(
@@ -80,10 +80,17 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
           canMove: false,
           canResize: false,
           canChangeGroup: false,
-          width: "10px",
           itemProps: {
             style: {
               backgroundColor: groupColors[validatedGroupId],
+              fontSize: isMobile ? "12px" : "14px",
+              color: "white",
+              borderRadius: "4px",
+              cursor: "pointer",
+              height: "auto",
+              minHeight: "18px",
+              display: "flex",
+              alignItems: "center",
             },
             onMouseDown: () => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
@@ -94,36 +101,47 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     : [];
 
   return (
-    <Timeline
-      groups={groups}
-      items={items}
-      traditionalZoom={true}
-      onZoom={(start, end) => {
-        console.log(start, end);
-      }}
-      defaultTimeStart={startOfMonth}
-      defaultTimeEnd={endOfMonth}
-      lineHeight={30}
-      sidebarWidth={sidebarWidth}
-    >
-      <CustomMarker date={moment().toDate()}>
-        {({ styles }) => {
-          const customStyles = {
-            ...styles,
-            background: "red",
-            width: "4px",
-          };
-          return <div style={customStyles} />;
+    <div className="timeline-container">
+      <Timeline
+        groups={groups}
+        items={items}
+        traditionalZoom={true}
+        onZoom={(start, end) => {
+          console.log(start, end);
         }}
-      </CustomMarker>
-      <TimelineHeaders className="!bg-transparent">
-        <DateHeader unit="month" className="*:!bg-white" />
-        <DateHeader
-          unit="day"
-          className="*:!bg-[#ADADAD] *:!text-white whitespace-nowrap"
-        />
-      </TimelineHeaders>
-    </Timeline>
+        defaultTimeStart={startOfMonth}
+        defaultTimeEnd={endOfMonth}
+        lineHeight={25} // Увеличенная высота строки
+        itemHeightRatio={0.8} // Увеличенное соотношение высоты элемента
+        sidebarWidth={sidebarWidth}
+      >
+        <CustomMarker date={moment().toDate()}>
+          {({ styles }) => {
+            const customStyles = {
+              ...styles,
+              background: "red",
+              width: "4px",
+            };
+            return <div style={customStyles} />;
+          }}
+        </CustomMarker>
+        <TimelineHeaders className="!bg-transparent">
+          <DateHeader unit="month" className="*:!bg-white *:!text-base" />
+          <DateHeader
+            unit="day"
+            className="*:!bg-[#ADADAD] *:!text-white *:!text-sm whitespace-nowrap"
+          />
+        </TimelineHeaders>
+      </Timeline>
+      <style jsx global>{`
+        .react-calendar-timeline .rct-header-root {
+          font-size: 14px;
+        }
+        .react-calendar-timeline .rct-sidebar {
+          font-size: 14px;
+        }
+      `}</style>
+    </div>
   );
 };
 

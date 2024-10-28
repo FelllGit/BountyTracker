@@ -125,7 +125,15 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
     },
     cell: ({ row }) => {
       const amount = row.getValue("maxReward") as number;
-      return <div className="font-medium">${amount}</div>;
+      return (
+        <div className="font-medium">
+          $
+          {amount.toLocaleString("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}
+        </div>
+      );
     },
   },
   {
