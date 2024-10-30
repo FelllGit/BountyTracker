@@ -4,7 +4,7 @@ import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 const fetchW3SecurityContests = async (
   search?: string,
   languages?: string[],
-  platform?: string,
+  platforms?: string[],
   startDate?: string,
   endDate?: string,
   status?: AuditStatus,
@@ -15,7 +15,12 @@ const fetchW3SecurityContests = async (
   const url = new URL(`${backendUrl}/w3-security-contests`);
 
   if (search) url.searchParams.set("search", search);
-  if (platform) url.searchParams.set("platform", platform);
+
+  if (platforms) {
+    for (const platform of platforms) {
+      url.searchParams.append("platforms", platform);
+    }
+  }
 
   if (languages) {
     for (const language of languages) {
@@ -50,7 +55,7 @@ const fetchW3SecurityContests = async (
 export const useGetW3SecurityContests = (
   search?: string,
   languages?: string[],
-  platform?: string,
+  platforms?: string[],
   startDate?: string,
   endDate?: string,
   status?: AuditStatus,
@@ -62,7 +67,7 @@ export const useGetW3SecurityContests = (
       "w3-security-contests",
       search,
       languages,
-      platform,
+      platforms,
       startDate,
       endDate,
       status,
@@ -72,7 +77,7 @@ export const useGetW3SecurityContests = (
       fetchW3SecurityContests(
         search,
         languages,
-        platform,
+        platforms,
         startDate,
         endDate,
         status,

@@ -3,7 +3,7 @@ import { BugBounty } from "@/interfaces/BugBounty";
 
 const fetchW3BugBounties = async (
   search?: string,
-  platform?: string,
+  platforms?: string[],
   maxReward?: number,
   languages?: string[],
   startDate?: string
@@ -15,9 +15,14 @@ const fetchW3BugBounties = async (
   url.searchParams.set("order", "DESC");
   url.searchParams.set("sort", "startDate");
   if (search) url.searchParams.set("search", search);
-  if (platform) url.searchParams.set("platform", platform);
   if (maxReward) url.searchParams.set("maxReward", maxReward.toString());
   if (startDate) url.searchParams.set("startDate", startDate);
+
+  if (platforms) {
+    for (const platform of platforms) {
+      url.searchParams.append("platforms", platform);
+    }
+  }
 
   if (languages) {
     for (const language of languages) {
@@ -44,7 +49,7 @@ const fetchW3BugBounties = async (
 
 export const useGetW3BugBounties = (
   search?: string,
-  platform?: string,
+  platforms?: string[],
   maxReward?: number,
   languages?: string[],
   startDate?: string
@@ -54,12 +59,12 @@ export const useGetW3BugBounties = (
     queryKey: [
       "w3-bug-bounties",
       search,
-      platform,
+      platforms,
       maxReward,
       languages,
       startDate,
     ],
     queryFn: () =>
-      fetchW3BugBounties(search, platform, maxReward, languages, startDate),
+      fetchW3BugBounties(search, platforms, maxReward, languages, startDate),
   });
 };

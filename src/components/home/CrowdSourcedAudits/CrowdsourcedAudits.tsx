@@ -41,7 +41,7 @@ const CrowdsourcedAudits = () => {
   const [status, setStatus] = useState<AuditStatus | null>(null);
 
   const [search, setSearch] = useState<string>("");
-  const [platform, setPlatform] = useState<string>("");
+  const [platforms, setPlatforms] = useState<string[]>([]);
   const [maxReward, setMaxReward] = useState<number | undefined>();
 
   const {
@@ -51,7 +51,7 @@ const CrowdsourcedAudits = () => {
   } = useGetW3SecurityContests(
     search,
     languages,
-    platform,
+    platforms,
     startDate ? format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
     endDate ? format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
     status ?? undefined,
@@ -198,43 +198,45 @@ const CrowdsourcedAudits = () => {
               })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Select
-            value={platform || ""}
-            onValueChange={(value) => {
-              const platformValue = Object.values(allPlatforms).find(
-                (platform) => platform === value
-              ) as string | null;
-              setPlatform(platformValue ?? ""); // provide a default value when platformValue is null
-            }}
-          >
-            <SelectTrigger className="flex gap-4 !text-grey-500 h-10 w-1/2 md:w-40">
-              <div
-                className={`flex items-center gap-2 ${!platform && "text-gray-500"}`}
-              >
-                <Icon name="Layers" className="h-fit w-fit" color="grey" />
-                <SelectValue placeholder="Platform" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.values(allPlatforms).map((platform) => (
-                <SelectItem key={platform} value={platform.valueOf()}>
-                  {platform}
-                </SelectItem>
-              ))}
-              <SelectSeparator />
-              <Button
-                className="w-full px-2"
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPlatform("");
-                }}
-              >
-                Clear
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="h-10 flex-1">
+              <Button variant="outline" className="flex justify-between">
+                <div className="flex gap-2 items-center">
+                  <Icon name="Layers" color="grey" />
+                  <p
+                    className={`${platforms.length > 0 ? "text-black" : "text-gray-500"}`}
+                  >
+                    {platforms.length > 0
+                      ? platforms.join(", ")
+                      : "Select Platforms"}{" "}
+                  </p>
+                </div>
+                <Icon name="ChevronsUpDown" size={13} color="grey" />
               </Button>
-            </SelectContent>
-          </Select>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Platforms</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {allPlatforms.map((platform) => {
+                const isChecked = platforms.includes(platform);
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={platform}
+                    checked={isChecked}
+                    onCheckedChange={() => {
+                      setPlatforms((currentPlatforms) =>
+                        isChecked
+                          ? currentPlatforms.filter((plat) => plat !== platform)
+                          : [...currentPlatforms, platform]
+                      );
+                    }}
+                  >
+                    {platform}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <DatePicker
             startDate={startDate}
             endDate={endDate}

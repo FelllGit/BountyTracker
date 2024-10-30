@@ -28,10 +28,11 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
 
   const sidebarWidth = isMobile ? 60 : isTablet ? 100 : 150;
 
-  const startOfMonth = moment().startOf("month");
+  const startOfMonth = moment().subtract(1, "week");
   const endOfMonth = moment()
     .endOf("month")
-    .subtract(1, "week")
+    .add(1, "month")
+    .subtract(2, "week")
     .add(isMobile ? 0 : isTablet ? 5 : 10, "days");
 
   const allPlatforms =
@@ -74,7 +75,7 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         return {
           id: index + 1,
           group: validatedGroupId,
-          title: `${project.project} - ${project.maxReward} ${project.rewardsToken} - ${project.languages}`,
+          title: `${project.project} - $${project.maxReward} - ${project.languages ? project.languages.join(", ") : "null"}`,
           start_time: moment(project.startDate).valueOf(),
           end_time: moment(project.endDate).valueOf(),
           canMove: false,
@@ -106,13 +107,10 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         groups={groups}
         items={items}
         traditionalZoom={true}
-        onZoom={(start, end) => {
-          console.log(start, end);
-        }}
         defaultTimeStart={startOfMonth}
         defaultTimeEnd={endOfMonth}
-        lineHeight={25} // Увеличенная высота строки
-        itemHeightRatio={0.8} // Увеличенное соотношение высоты элемента
+        lineHeight={25}
+        itemHeightRatio={0.8}
         sidebarWidth={sidebarWidth}
       >
         <CustomMarker date={moment().toDate()}>

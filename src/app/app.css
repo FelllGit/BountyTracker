@@ -8,34 +8,11 @@ root, html, body {
   font-weight: bold;
 }
 
+.rct-vl.rct-day-6,
+.rct-vl.rct-day-0 {
+  background-color: transparent !important;
+}
+
 .rct-item {
   z-index: 30 !important;
 }
-
-/*.rct-outer {*/
-/*  position: relative; !* Важливо для позиціонування псевдоелемента *!*/
-/*}*/
-
-/*.rct-outer:before {*/
-/*  content: "VigilSeek";*/
-/*  background-image: url('../media/img/VigilSeek_logo.png');*/
-/*  background-repeat: no-repeat;*/
-/*  background-size: 90px 90px;*/
-/*  background-position: left center;*/
-
-/*  position: absolute;*/
-/*  right: -7rem;*/
-/*  top: 50%;*/
-/*  transform: translate(-50%, -50%) scale(1.5);*/
-/*  opacity: 30%;*/
-/*  font-weight: bold;*/
-/*  font-size: xx-large;*/
-
-/*  padding-left: 90px;*/
-
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  */
-/*  width: 300px;*/
-/*  height: 90px;*/
-/*}*/
