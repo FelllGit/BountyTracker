@@ -114,7 +114,7 @@ const CrowdsourcedAuditsTable = () => {
     languages,
     startDate,
     endDate,
-    status,
+    statuses,
     sorting,
   ]);
 
