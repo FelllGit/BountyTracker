@@ -6,9 +6,12 @@ import image from "./../media/img/VigilSeek_logo.png";
 import { useMediaQuery } from "react-responsive";
 import DesktopNavigation from "@/components/navigation/desktop";
 import MobileNavigation from "@/components/navigation/mobile";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const isMobile = useMediaQuery({ maxWidth: 1023 });
+  const router = useRouter();
+
   return (
     <nav
       className={`flex items-center px-10 py-6 border-b-2 !fixed w-screen bg-white z-50 ${isMobile && "justify-between"}`}
@@ -17,7 +20,7 @@ const Header = () => {
         <Button
           variant="logo"
           className="text-xl font-bold flex items-center"
-          disabled
+          onClick={() => router.push("/")}
         >
           <Image src={image} alt="Logo" width={64} height={64} />
           VigilSeek
