@@ -2,14 +2,6 @@
 import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/ui/date-picker";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
@@ -43,7 +35,7 @@ const CrowdsourcedAuditsTable = () => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
-  const [status, setStatus] = useState<AuditStatus | null>(null);
+  const [statuses, setStatuses] = useState<AuditStatus[]>([]);
 
   const [search, setSearch] = useState<string>("");
   const [platforms, setPlatforms] = useState<string[]>([]);
@@ -55,7 +47,7 @@ const CrowdsourcedAuditsTable = () => {
     platforms,
     startDate ? format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
     endDate ? format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-    status ?? undefined,
+    statuses,
     maxReward
   );
 
@@ -291,43 +283,55 @@ const CrowdsourcedAuditsTable = () => {
           mode="range"
           className="md:w-56 flex-1"
         />
-        <Select
-          value={status?.valueOf() || ""}
-          onValueChange={(value) => {
-            const projectStatus = Object.values(AuditStatus).find(
-              (status) => status === value
-            ) as AuditStatus | null;
-            setStatus(projectStatus);
-          }}
-        >
-          <SelectTrigger className="flex gap-4 !text-grey-500 h-10 w-1/2 md:w-40">
-            <div
-              className={`flex items-center gap-2 ${!status && "text-gray-500"}`}
-            >
-              <Icon name="TrendingUp" className="h-fit w-fit" color="grey" />
-              <SelectValue placeholder="Status" />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            {Object.values(AuditStatus).map((status) => (
-              <SelectItem key={status} value={status.valueOf()}>
-                {status}
-              </SelectItem>
-            ))}
-            <SelectSeparator />
-            <Button
-              className="w-full px-2"
-              variant="secondary"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                setStatus(null);
-              }}
-            >
-              Clear
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="h-10 w-full max-w-56 flex-1">
+            <Button variant="outline" className="flex justify-between">
+              <div className="flex gap-2 items-center truncate">
+                <Icon name="TrendingUp" className="h-fit w-fit" color="grey" />
+                <p
+                  className={`${statuses.length > 0 ? "text-black" : "text-gray-500"} truncate`}
+                >
+                  {statuses.length > 0
+                    ? statuses.join(", ")
+                    : "Select Statuses"}
+                </p>
+              </div>
+              <Icon name="ChevronsUpDown" size={13} color="grey" />
             </Button>
-          </SelectContent>
-        </Select>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Statuses</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {Object.values(AuditStatus).map((status) => {
+              const isChecked = statuses.includes(status);
+              return (
+                <DropdownMenuCheckboxItem
+                  key={status}
+                  checked={isChecked}
+                  onCheckedChange={() => {
+                    setStatuses((currentStatuses) =>
+                      isChecked
+                        ? currentStatuses.filter((s) => s !== status)
+                        : [...currentStatuses, status]
+                    );
+                  }}
+                >
+                  {status}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full text-left"
+                onClick={() => setStatuses([])}
+              >
+                Clear
+              </Button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <div className="relative flex-1 md:w-36">
           <Icon
             name="HandCoins"

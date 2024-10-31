@@ -7,7 +7,7 @@ const fetchW3SecurityContests = async (
   platforms?: string[],
   startDate?: string,
   endDate?: string,
-  status?: AuditStatus,
+  statuses?: AuditStatus[],
   maxReward?: number
 ): Promise<CrowdsourcedAudit[]> => {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -28,9 +28,14 @@ const fetchW3SecurityContests = async (
     }
   }
 
+  if (statuses) {
+    for (const status of statuses) {
+      url.searchParams.append("status", status.toUpperCase());
+    }
+  }
+
   if (startDate) url.searchParams.set("startDate", startDate);
   if (endDate) url.searchParams.set("endDate", endDate);
-  if (status) url.searchParams.set("status", status.toUpperCase());
   if (maxReward) url.searchParams.set("maxReward", maxReward.toString());
 
   url.searchParams.set("order", "DESC");
@@ -58,7 +63,7 @@ export const useGetW3SecurityContests = (
   platforms?: string[],
   startDate?: string,
   endDate?: string,
-  status?: AuditStatus,
+  statuses?: AuditStatus[],
   maxReward?: number
 ) => {
   return useQuery({
@@ -70,7 +75,7 @@ export const useGetW3SecurityContests = (
       platforms,
       startDate,
       endDate,
-      status,
+      statuses,
       maxReward,
     ],
     queryFn: () =>
@@ -80,7 +85,7 @@ export const useGetW3SecurityContests = (
         platforms,
         startDate,
         endDate,
-        status,
+        statuses,
         maxReward
       ),
   });
