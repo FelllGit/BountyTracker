@@ -12,6 +12,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -19,11 +20,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { extractUniquePlatforms } from "@/utils/platformUtils";
 import { extractUniqueLanguages } from "@/utils/languageUtils";
+import { SortingState } from "@tanstack/react-table";
 
 const PAGE_SIZE = 20;
 
 const BugBountyTable = () => {
   const [displayedData, setDisplayedData] = useState<BugBounty[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const loader = useRef(null);
   const [page, setPage] = useState(0);
 
@@ -49,6 +52,41 @@ const BugBountyTable = () => {
   const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
   const [allLanguages, setAllLanguages] = useState<string[]>([]);
 
+  function sortData(data: BugBounty[], sorting: SortingState) {
+    if (sorting.length === 0) return data;
+
+    return [...data].sort((a, b) => {
+      for (const sort of sorting) {
+        const { id, desc } = sort;
+        const key = id as keyof BugBounty; // Cast 'id' to keyof BugBounty
+        let aValue = a[key];
+        let bValue = b[key];
+
+        // Handle specific data types
+        if (key === "startDate") {
+          const aValueDate = new Date(aValue as string);
+          const bValueDate = new Date(bValue as string);
+          if (aValueDate > bValueDate) return desc ? -1 : 1;
+          if (aValueDate < bValueDate) return desc ? 1 : -1;
+          continue;
+        } else if (key === "languages") {
+          aValue = (aValue as string[]).join(", ");
+          bValue = (bValue as string[]).join(", ");
+        } else if (key === "maxReward") {
+          aValue = aValue || 0;
+          bValue = bValue || 0;
+        } else if (typeof aValue === "string" && typeof bValue === "string") {
+          aValue = aValue.toLowerCase();
+          bValue = bValue.toLowerCase();
+        }
+
+        if (aValue > bValue) return desc ? -1 : 1;
+        if (aValue < bValue) return desc ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
   useEffect(() => {
     if (bugBounties && allPlatforms.length === 0 && allLanguages.length === 0) {
       setAllPlatforms(extractUniquePlatforms(bugBounties));
@@ -59,16 +97,26 @@ const BugBountyTable = () => {
   useEffect(() => {
     setPage(0);
     if (bugBounties) {
-      setDisplayedData(bugBounties.slice(0, PAGE_SIZE));
+      const sortedData = sortData(bugBounties, sorting);
+      setDisplayedData(sortedData.slice(0, PAGE_SIZE));
     }
-  }, [bugBounties, search, platforms, maxReward, languages, startDate]);
+  }, [
+    bugBounties,
+    search,
+    platforms,
+    maxReward,
+    languages,
+    startDate,
+    sorting,
+  ]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isLoading && bugBounties) {
           const nextPage = page + 1;
-          const nextData = bugBounties.slice(0, nextPage * PAGE_SIZE);
+          const sortedData = sortData(bugBounties, sorting);
+          const nextData = sortedData.slice(0, nextPage * PAGE_SIZE);
           setDisplayedData(nextData);
           setPage(nextPage);
         }
@@ -85,7 +133,7 @@ const BugBountyTable = () => {
         observer.unobserve(loader.current);
       }
     };
-  }, [isLoading, bugBounties, page]);
+  }, [isLoading, bugBounties, page, sorting]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -155,6 +203,16 @@ const BugBountyTable = () => {
                 );
               })}
             </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full text-left"
+                onClick={() => setPlatforms([])}
+              >
+                Clear
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
@@ -194,6 +252,16 @@ const BugBountyTable = () => {
                 </DropdownMenuCheckboxItem>
               );
             })}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full text-left"
+                onClick={() => setPlatforms([])}
+              >
+                Clear
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <DatePicker
@@ -223,6 +291,8 @@ const BugBountyTable = () => {
           columns={bugBountyTableColumns}
           data={displayedData}
           isLoading={isLoading}
+          sorting={sorting}
+          setSorting={setSorting}
         />
       )}
 

@@ -22,6 +22,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -196,6 +197,16 @@ const CrowdsourcedAudits = () => {
                   </DropdownMenuCheckboxItem>
                 );
               })}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="p-0">
+                <Button
+                  variant="ghost"
+                  className="w-full text-left"
+                  onClick={() => setLanguages([])}
+                >
+                  Clear
+                </Button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <DropdownMenu>
@@ -235,6 +246,16 @@ const CrowdsourcedAudits = () => {
                   </DropdownMenuCheckboxItem>
                 );
               })}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="p-0">
+                <Button
+                  variant="ghost"
+                  className="w-full text-left"
+                  onClick={() => setPlatforms([])}
+                >
+                  Clear
+                </Button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <DatePicker

@@ -26,7 +26,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
           <div className="h-8 w-8 relative rounded-full overflow-hidden">
             <Image
               priority
-              src={`/api/image-proxy?imageUrl=${encodeURIComponent(imageUrl)}`}
+              src={imageUrl}
               alt="Logo"
               width="32"
               height="32"

@@ -9,9 +9,30 @@ import {
 } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
+import { useContext, useState } from "react";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+interface DropdownMenuProps {
+  children: React.ReactNode;
+}
 
+const DropdownMenuContext = React.createContext<{
+  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+} | null>(null);
+
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <DropdownMenuContext.Provider value={{ setMenuOpen }}>
+      <DropdownMenuPrimitive.Root
+        open={menuOpen}
+        onOpenChange={(open) => setMenuOpen(open)}
+      >
+        {children}
+      </DropdownMenuPrimitive.Root>
+    </DropdownMenuContext.Provider>
+  );
+};
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
@@ -100,24 +121,33 @@ DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
->(({ className, children, checked, ...props }, ref) => (
-  <DropdownMenuPrimitive.CheckboxItem
-    ref={ref}
-    className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      className
-    )}
-    checked={checked}
-    {...props}
-  >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-      <DropdownMenuPrimitive.ItemIndicator>
-        <CheckIcon className="h-4 w-4" />
-      </DropdownMenuPrimitive.ItemIndicator>
-    </span>
-    {children}
-  </DropdownMenuPrimitive.CheckboxItem>
-));
+>(({ className, children, checked, ...props }, ref) => {
+  const context = useContext(DropdownMenuContext);
+
+  return (
+    <DropdownMenuPrimitive.CheckboxItem
+      ref={ref}
+      className={cn(
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
+      checked={checked}
+      onSelect={(e) => e.preventDefault()} // запобігаємо закриттю меню
+      onCheckedChange={(isChecked) => {
+        props.onCheckedChange?.(isChecked);
+        context?.setMenuOpen(true); // залишаємо меню відкритим через контекст
+      }}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <DropdownMenuPrimitive.ItemIndicator>
+          <CheckIcon className="h-4 w-4" />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  );
+});
 DropdownMenuCheckboxItem.displayName =
   DropdownMenuPrimitive.CheckboxItem.displayName;
 

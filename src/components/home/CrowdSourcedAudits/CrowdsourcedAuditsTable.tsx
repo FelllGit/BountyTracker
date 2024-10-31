@@ -21,17 +21,20 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { extractUniquePlatforms } from "@/utils/platformUtils";
 import { extractUniqueLanguages } from "@/utils/languageUtils";
+import { SortingState } from "@tanstack/react-table";
 
 const PAGE_SIZE = 20;
 
 const CrowdsourcedAuditsTable = () => {
   const [displayedData, setDisplayedData] = useState<CrowdsourcedAudit[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const loader = useRef(null); // Ref для елемента завантаження
   const [page, setPage] = useState(0); // State для сторінки
 
@@ -57,6 +60,40 @@ const CrowdsourcedAuditsTable = () => {
   const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
   const [allLanguages, setAllLanguages] = useState<string[]>([]);
 
+  function sortData(data: CrowdsourcedAudit[], sorting: SortingState) {
+    if (sorting.length === 0) return data;
+
+    return [...data].sort((a, b) => {
+      for (const sort of sorting) {
+        const { id, desc } = sort;
+        const key = id as keyof CrowdsourcedAudit; // Cast 'id' to keyof CrowdsourcedAudit
+        let aValue = a[key];
+        let bValue = b[key];
+
+        // Handle specific data types
+        if (key === "startDate" || key === "endDate") {
+          const aValueDate = new Date(aValue as string);
+          const bValueDate = new Date(bValue as string);
+          if (aValueDate > bValueDate) return desc ? -1 : 1;
+          if (aValueDate < bValueDate) return desc ? 1 : -1;
+        } else if (key === "languages") {
+          aValue = (aValue as string[]).join(", ");
+          bValue = (bValue as string[]).join(", ");
+        } else if (key === "maxReward") {
+          aValue = aValue || 0;
+          bValue = bValue || 0;
+        } else if (typeof aValue === "string" && typeof bValue === "string") {
+          aValue = aValue.toLowerCase();
+          bValue = bValue.toLowerCase();
+        }
+
+        if (aValue > bValue) return desc ? -1 : 1;
+        if (aValue < bValue) return desc ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
   useEffect(() => {
     if (
       projectsData &&
@@ -72,7 +109,8 @@ const CrowdsourcedAuditsTable = () => {
   useEffect(() => {
     setPage(0);
     if (projectsData) {
-      setDisplayedData(projectsData.slice(0, PAGE_SIZE));
+      const sortedData = sortData(projectsData, sorting);
+      setDisplayedData(sortedData.slice(0, PAGE_SIZE));
     }
   }, [
     projectsData,
@@ -83,6 +121,7 @@ const CrowdsourcedAuditsTable = () => {
     startDate,
     endDate,
     status,
+    sorting,
   ]);
 
   // IntersectionObserver для підвантаження наступних сторінок
@@ -91,7 +130,8 @@ const CrowdsourcedAuditsTable = () => {
       (entries) => {
         if (entries[0].isIntersecting && !isLoading && projectsData) {
           const nextPage = page + 1;
-          const nextData = projectsData.slice(0, nextPage * PAGE_SIZE);
+          const sortedData = sortData(projectsData, sorting);
+          const nextData = sortedData.slice(0, nextPage * PAGE_SIZE);
           setDisplayedData(nextData);
           setPage(nextPage);
         }
@@ -108,7 +148,7 @@ const CrowdsourcedAuditsTable = () => {
         observer.unobserve(loader.current);
       }
     };
-  }, [isLoading, projectsData, page]);
+  }, [isLoading, projectsData, page, sorting]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -176,6 +216,16 @@ const CrowdsourcedAuditsTable = () => {
                 </DropdownMenuCheckboxItem>
               );
             })}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full text-left"
+                onClick={() => setLanguages([])}
+              >
+                Clear
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
@@ -215,6 +265,16 @@ const CrowdsourcedAuditsTable = () => {
                 </DropdownMenuCheckboxItem>
               );
             })}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full text-left"
+                onClick={() => setPlatforms([])}
+              >
+                Clear
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <DatePicker
@@ -281,6 +341,8 @@ const CrowdsourcedAuditsTable = () => {
         columns={crowdsourcedAuditsTableColumns}
         data={displayedData}
         isLoading={isLoading}
+        sorting={sorting}
+        setSorting={setSorting}
       />
       {!isLoading &&
         projectsData &&
