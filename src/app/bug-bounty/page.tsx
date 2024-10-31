@@ -1,4 +1,4 @@
-import BugBountyTable from "@/components/home/BugBounty";
+import BugBountyTable from "@/components/home/bugBunty/BugBounty";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

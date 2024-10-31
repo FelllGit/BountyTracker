@@ -15,7 +15,7 @@ import { useState, useRef, useEffect } from "react";
 import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import { useGetW3SecurityContests } from "@/hooks/useGetW3SecurityContests";
 import { format } from "date-fns";
-import { DataTable } from "@/components/home/data-table";
+import { DataTable } from "@/components/ui/data-table";
 import { crowdsourcedAuditsTableColumns } from "@/components/home/CrowdSourcedAudits/CrowdsourcedAuditsTableColumns";
 import {
   DropdownMenu,
@@ -179,12 +179,12 @@ const CrowdsourcedAuditsTable = () => {
           />
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 flex-1">
+          <DropdownMenuTrigger asChild className="h-10 flex-1 max-w-56">
             <Button variant="outline" className="flex justify-between">
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center truncate">
                 <Icon name="SquareFunction" color="grey" />
                 <p
-                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"}`}
+                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"} truncate`}
                 >
                   {languages.length > 0
                     ? languages.join(", ")
@@ -229,12 +229,16 @@ const CrowdsourcedAuditsTable = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 flex-1">
-            <Button variant="outline" className="flex justify-between">
-              <div className="flex gap-2 items-center">
+          <DropdownMenuTrigger asChild className="h-10 w-full max-w-56 flex-1">
+            <Button
+              variant="outline"
+              className="flex justify-between "
+              title={languages.join(", ")}
+            >
+              <div className="flex w-full gap-2 items-center truncate">
                 <Icon name="Layers" color="grey" />
                 <p
-                  className={`${platforms.length > 0 ? "text-black" : "text-gray-500"}`}
+                  className={`${platforms.length > 0 ? "text-black" : "text-gray-500"} truncate`}
                 >
                   {platforms.length > 0
                     ? platforms.join(", ")

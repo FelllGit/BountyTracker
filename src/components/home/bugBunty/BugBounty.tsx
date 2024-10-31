@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { bugBountyTableColumns } from "@/components/home/bugBunty/bugBountyTableColumns";
-import { DataTable } from "./data-table";
+import { DataTable } from "../../ui/data-table";
 import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/ui/date-picker";
@@ -150,7 +150,7 @@ const BugBountyTable = () => {
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-bold">Explore Bug Bounty Programs</h1>
       <div className="flex flex-wrap xl:flex-nowrap gap-2">
-        <div className="relative md:w-56 w-full">
+        <div className="relative md:w-96 w-full">
           <Icon
             name="Search"
             className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
@@ -164,12 +164,12 @@ const BugBountyTable = () => {
           />
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 flex-1">
+          <DropdownMenuTrigger asChild className="h-10 flex-1 max-w-xl">
             <Button variant="outline" className="flex justify-between">
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center truncate">
                 <Icon name="SquareFunction" color="grey" />
                 <p
-                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"}`}
+                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"} truncate`}
                 >
                   {languages.length > 0
                     ? languages.join(", ")
@@ -216,12 +216,12 @@ const BugBountyTable = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 flex-1">
+          <DropdownMenuTrigger asChild className="h-10 flex-1 max-w-xl">
             <Button variant="outline" className="flex justify-between">
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center truncate">
                 <Icon name="Layers" color="grey" />
                 <p
-                  className={`${platforms.length > 0 ? "text-black" : "text-gray-500"}`}
+                  className={`${platforms.length > 0 ? "text-black" : "text-gray-500"} truncate`}
                 >
                   {platforms.length > 0
                     ? platforms.join(", ")
