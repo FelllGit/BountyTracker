@@ -26,7 +26,9 @@ const PAGE_SIZE = 20;
 
 const BugBountyTable = () => {
   const [displayedData, setDisplayedData] = useState<BugBounty[]>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "startDate", desc: true },
+  ]);
   const loader = useRef(null);
   const [page, setPage] = useState(0);
 

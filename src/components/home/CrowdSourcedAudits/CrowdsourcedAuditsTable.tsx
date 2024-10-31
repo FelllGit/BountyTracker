@@ -34,7 +34,9 @@ const PAGE_SIZE = 20;
 
 const CrowdsourcedAuditsTable = () => {
   const [displayedData, setDisplayedData] = useState<CrowdsourcedAudit[]>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "startDate", desc: true },
+  ]);
   const loader = useRef(null); // Ref для елемента завантаження
   const [page, setPage] = useState(0); // State для сторінки
 
