@@ -71,8 +71,8 @@ const CrowdsourcedAuditsTable = () => {
           if (aValueDate > bValueDate) return desc ? -1 : 1;
           if (aValueDate < bValueDate) return desc ? 1 : -1;
         } else if (key === "languages") {
-          aValue = (aValue as string[]).join(", ");
-          bValue = (bValue as string[]).join(", ");
+          aValue = Array.isArray(aValue) ? (aValue as string[]).join(", ") : "";
+          bValue = Array.isArray(bValue) ? (bValue as string[]).join(", ") : "";
         } else if (key === "maxReward") {
           aValue = aValue || 0;
           bValue = bValue || 0;
