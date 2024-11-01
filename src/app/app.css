@@ -1,0 +1,18 @@
+root, html, body {
+  width: 100%;
+  min-height: -webkit-fill-available;
+}
+
+.monthHeader {
+  background-color: aqua !important;
+  font-weight: bold;
+}
+
+.rct-vl.rct-day-6,
+.rct-vl.rct-day-0 {
+  background-color: transparent !important;
+}
+
+.rct-item {
+  z-index: 30 !important;
+}
