@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import * as motion from "framer-motion/client";
 import Image from "next/image";
-import image from "./../media/img/VigilSeek_logo.png";
+import image from "@/media/img/VigilSeek_logo.png";
 import { useMediaQuery } from "react-responsive";
 import DesktopNavigation from "@/components/navigation/desktop";
 import MobileNavigation from "@/components/navigation/mobile";
