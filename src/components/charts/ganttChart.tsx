@@ -51,6 +51,9 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     Cantina: "#fa540a",
     Immunefi: "#EB3678",
     Sherlock: "#240293",
+    code4rena: "#7549FF",
+    CodeHawks: "#Ef5B69",
+    HatsFinance: "#24E7C5",
   };
 
   const groupColors: Record<number, string> = groups.reduce(
