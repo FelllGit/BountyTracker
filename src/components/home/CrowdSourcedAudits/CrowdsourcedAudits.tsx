@@ -170,25 +170,29 @@ const CrowdsourcedAudits = () => {
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Languages</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {allLanguages.map((language) => {
-                const isChecked = languages.includes(language);
+              <div className="max-h-64 overflow-y-scroll">
+                {allLanguages.map((language) => {
+                  const isChecked = languages.includes(language);
 
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={language}
-                    checked={isChecked}
-                    onCheckedChange={() => {
-                      setLanguages((currentLanguages) =>
-                        isChecked
-                          ? currentLanguages.filter((lang) => lang !== language)
-                          : [...currentLanguages, language]
-                      );
-                    }}
-                  >
-                    {language}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={language}
+                      checked={isChecked}
+                      onCheckedChange={() => {
+                        setLanguages((currentLanguages) =>
+                          isChecked
+                            ? currentLanguages.filter(
+                                (lang) => lang !== language
+                              )
+                            : [...currentLanguages, language]
+                        );
+                      }}
+                    >
+                      {language}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="p-0">
                 <Button

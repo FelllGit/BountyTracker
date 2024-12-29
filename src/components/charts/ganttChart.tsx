@@ -11,6 +11,7 @@ import Timeline, {
 import "react-calendar-timeline/lib/Timeline.css";
 import { CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import { useMediaQuery } from "react-responsive";
+import CustomItemRenderer from "@/components/charts/customItemRenderer";
 
 interface IGanttChartProps {
   projectsData: CrowdsourcedAudit[] | undefined;
@@ -20,7 +21,7 @@ interface IGanttChartProps {
 
 const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
   if (!projectsData) {
-    return <div>No data</div>;
+    return <div className="h-24 text-sm text-center">Loading...</div>;
   }
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -114,6 +115,7 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         lineHeight={25}
         itemHeightRatio={0.8}
         sidebarWidth={sidebarWidth}
+        itemRenderer={(props) => <CustomItemRenderer {...props} />}
       >
         <CustomMarker date={moment().toDate()}>
           {({ styles }) => {
