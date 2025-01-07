@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <nav
-      className={`flex items-center px-10 py-6 border-b-2 !fixed w-screen bg-white z-50 ${isMobile && "justify-between"}`}
+      className={`flex items-center px-10 py-6 border-b-2 !fixed w-screen bg-white z-[100] ${isMobile && "justify-between"}`}
     >
       <motion.div initial={{ scale: 1 }} whileHover={{ scale: 1.1 }}>
         <Button

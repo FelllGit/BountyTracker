@@ -54,7 +54,7 @@ const CustomItemRenderer = ({
   }, [item.title, textRef]);
 
   return (
-    <div {...itemProps}>
+    <div {...itemProps} className={shouldAnimate ? "overflow-x-hidden" : ""}>
       {itemContext.useResizeHandle && <div {...leftResizeProps} />}
       <div
         ref={textRef}
