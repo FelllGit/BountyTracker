@@ -78,7 +78,7 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         return {
           id: index + 1,
           group: validatedGroupId,
-          title: `${project.project} - $${project.maxReward} - ${project.languages ? project.languages.join(", ") : "null"}`,
+          title: `${project.project} - $${project.maxReward} - ${project.languages ? project.languages.slice(0, 2).join(", ") : "null"}`,
           start_time: moment(project.startDate).valueOf(),
           end_time: moment(project.endDate).valueOf(),
           canMove: false,
@@ -91,10 +91,8 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
               color: "white",
               borderRadius: "4px",
               cursor: "pointer",
-              height: "auto",
               minHeight: "18px",
-              display: "flex",
-              alignItems: "center",
+              // overflow: "hidden",
             },
             onMouseDown: () => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
