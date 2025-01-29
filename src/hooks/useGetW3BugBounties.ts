@@ -6,7 +6,8 @@ const fetchW3BugBounties = async (
   platforms?: string[],
   maxReward?: number,
   languages?: string[],
-  startDate?: string
+  startDate?: string,
+  excludeLanguages?: boolean
 ): Promise<BugBounty[]> => {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -17,6 +18,7 @@ const fetchW3BugBounties = async (
   if (search) url.searchParams.set("search", search);
   if (maxReward) url.searchParams.set("maxReward", maxReward.toString());
   if (startDate) url.searchParams.set("startDate", startDate);
+  if (excludeLanguages) url.searchParams.set("excludeLanguages", "true");
 
   if (platforms) {
     for (const platform of platforms) {
@@ -24,7 +26,7 @@ const fetchW3BugBounties = async (
     }
   }
 
-  if (languages) {
+  if (!excludeLanguages && languages) {
     for (const language of languages) {
       url.searchParams.append("languages", language);
     }
@@ -52,7 +54,8 @@ export const useGetW3BugBounties = (
   platforms?: string[],
   maxReward?: number,
   languages?: string[],
-  startDate?: string
+  startDate?: string,
+  excludeLanguages?: boolean
 ) => {
   return useQuery({
     // eslint-disable-next-line no-restricted-syntax
@@ -63,8 +66,16 @@ export const useGetW3BugBounties = (
       maxReward,
       languages,
       startDate,
+      excludeLanguages,
     ],
     queryFn: () =>
-      fetchW3BugBounties(search, platforms, maxReward, languages, startDate),
+      fetchW3BugBounties(
+        search,
+        platforms,
+        maxReward,
+        languages,
+        startDate,
+        excludeLanguages
+      ),
   });
 };
