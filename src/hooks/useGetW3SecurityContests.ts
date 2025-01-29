@@ -8,7 +8,8 @@ const fetchW3SecurityContests = async (
   startDate?: string,
   endDate?: string,
   statuses?: AuditStatus[],
-  maxReward?: number
+  maxReward?: number,
+  excludeLanguages?: boolean
 ): Promise<CrowdsourcedAudit[]> => {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -22,7 +23,9 @@ const fetchW3SecurityContests = async (
     }
   }
 
-  if (languages) {
+  if (excludeLanguages) url.searchParams.set("excludeLanguages", "true");
+
+  if (!excludeLanguages && languages) {
     for (const language of languages) {
       url.searchParams.append("languages", language);
     }
@@ -64,7 +67,8 @@ export const useGetW3SecurityContests = (
   startDate?: string,
   endDate?: string,
   statuses?: AuditStatus[],
-  maxReward?: number
+  maxReward?: number,
+  excludeLanguages?: boolean
 ) => {
   return useQuery({
     // eslint-disable-next-line no-restricted-syntax
@@ -77,6 +81,7 @@ export const useGetW3SecurityContests = (
       endDate,
       statuses,
       maxReward,
+      excludeLanguages,
     ],
     queryFn: () =>
       fetchW3SecurityContests(
@@ -86,7 +91,8 @@ export const useGetW3SecurityContests = (
         startDate,
         endDate,
         statuses,
-        maxReward
+        maxReward,
+        excludeLanguages
       ),
   });
 };
