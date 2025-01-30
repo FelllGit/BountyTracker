@@ -12,11 +12,18 @@ export const usePatchSecurityContestLanguages = () => {
   const url = new URL(`${backendUrl}/w3-security-contests`);
 
   return useMutation<void, Error, PatchSecurityContestVariables>({
-    mutationFn: async ({
-      id,
-      languages,
-    }: PatchSecurityContestVariables): Promise<void> => {
-      await axios.patch(`${url}/${id}/languages`, { languages });
+    mutationFn: async ({ id, languages }: PatchSecurityContestVariables) => {
+      const authPassword = sessionStorage.getItem("admin-password");
+
+      await axios.patch(
+        `${url}/${id}/languages`,
+        { languages },
+        {
+          headers: {
+            "X-Auth-Password": authPassword,
+          },
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["w3-security-contests"] });
