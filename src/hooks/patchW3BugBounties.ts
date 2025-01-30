@@ -8,16 +8,22 @@ interface PatchBugBountyVariables {
 
 export const usePatchBugBountyLanguages = () => {
   const queryClient = useQueryClient();
-
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
   const url = new URL(`${backendUrl}/w3-bug-bounties`);
 
   return useMutation<void, Error, PatchBugBountyVariables>({
-    mutationFn: async ({
-      id,
-      languages,
-    }: PatchBugBountyVariables): Promise<void> => {
-      await axios.patch(`${url}/${id}/languages`, { languages });
+    mutationFn: async ({ id, languages }: PatchBugBountyVariables) => {
+      const authPassword = sessionStorage.getItem("admin-password");
+
+      await axios.patch(
+        `${url}/${id}/languages`,
+        { languages },
+        {
+          headers: {
+            "X-Auth-Password": authPassword,
+          },
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["w3-bug-bounties"] });

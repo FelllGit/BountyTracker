@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import bcrypt from "bcryptjs";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,26 +13,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AdminBugBountyTable from "@/components/admin/bugBunty/BugBounty";
 import AdminCrowdsourcedAudits from "@/components/admin/crowdsourcedAudits /CrowdsourcedAudits";
+import { useLogin } from "@/hooks/useLogin";
 
 export default function AdminPage() {
   const [isOpened, setIsOpened] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [password, setPassword] = useState("");
 
-  const STORED_HASHED_PASSWORD =
-    "$2a$10$e79LOD1ugUnr.ae/jSgX4.v4yuDX7GcRbiDdfhVwXhqnGvJ.PzHfy";
+  const handlePasswordSubmit = async () => {
+    const result = await useLogin(password);
 
-  const handlePasswordSubmit = () => {
-    const isValidPassword = bcrypt.compareSync(
-      password,
-      STORED_HASHED_PASSWORD
-    );
-
-    if (isValidPassword) {
+    if (result.success) {
       setIsOpened(false);
+      setIsSuccess(true);
     } else {
       window.location.href = "/";
     }
   };
+
+  useEffect(() => {
+    if (!isSuccess && !isOpened) window.location.href = "/";
+  }, [isOpened, isSuccess]);
 
   return (
     <div>
@@ -63,7 +63,7 @@ export default function AdminPage() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      {!isOpened && (
+      {!isOpened && isSuccess && (
         <Tabs defaultValue="ca" className="">
           <TabsList>
             <TabsTrigger value="ca">Crowdsourced Audits</TabsTrigger>
