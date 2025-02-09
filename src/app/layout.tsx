@@ -20,22 +20,22 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "VigilSeek - Crowdsourced Audits",
+  title: "VigilSeek - Audit Competitions",
   description:
-    "VigilSeek offers crowdsourced security audits, empowering a community to collaborate on securing digital platforms. Join us to contribute to security and transparency.",
+    "Vigilseek – The ultimate bug bounty and crowdsourced contest aggregator. Track bounties from platforms like Cantina, HackenProof, Immunefi, Sherlock, CodeHawks, and Code4rena — all in one place.",
   keywords:
-    "VigilSeek, crowdsourced audits, security, community, vulnerability discovery, cybersecurity",
+    "VigilSeek, bug bounty, audit competition, security aggregator, web3 crowdsourced contest, Cantina, HackenProof, Immunefi, Sherlock, CodeHawks, Code4rena",
   openGraph: {
-    title: "VigilSeek - Crowdsourced Audits",
+    title: "VigilSeek - Audit Competitions",
     description:
-      "Join VigilSeek to participate in crowdsourced security audits and enhance the security of digital platforms through collaboration.",
+      "Vigilseek – The ultimate bug bounty and crowdsourced contest aggregator. Track bounties from platforms like Cantina, HackenProof, Immunefi, Sherlock, CodeHawks, and Code4rena — all in one place.",
     type: "website",
+    url: "https://www.vigilseek.com",
+    siteName: "VigilSeek - Audit Competitions",
+    locale: "en_US",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "VigilSeek - Crowdsourced Audits",
-    description:
-      "Collaborate on security audits with VigilSeek's community for a safer digital world.",
+  icons: {
+    icon: "favicon.ico",
   },
 };
 

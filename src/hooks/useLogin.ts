@@ -6,6 +6,9 @@ export const useLogin = async (password: string) => {
 
   try {
     const response = await axios.get(url, {
+      headers: {
+        "x-auth-password": password,
+      },
       withCredentials: true,
     });
 

@@ -22,7 +22,13 @@ const Header = () => {
           className="text-xl font-bold flex items-center"
           onClick={() => router.push("/")}
         >
-          <Image src={image} alt="Logo" width={64} height={64} />
+          <Image
+            src={image}
+            alt="Logo"
+            width={64}
+            height={64}
+            priority={false}
+          />
           VigilSeek
         </Button>
       </motion.div>
