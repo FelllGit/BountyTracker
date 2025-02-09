@@ -34,9 +34,6 @@ export const metadata: Metadata = {
     siteName: "VigilSeek - Audit Competitions",
     locale: "en_US",
   },
-  icons: {
-    icon: "favicon.ico",
-  },
 };
 
 export default function RootLayout({
