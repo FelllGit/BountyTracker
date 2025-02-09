@@ -31,7 +31,10 @@ const CrowdsourcedAudits = () => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
-  const [statuses, setStatuses] = useState<AuditStatus[]>([]);
+  const [statuses, setStatuses] = useState<AuditStatus[]>([
+    AuditStatus.UPCOMING,
+    AuditStatus.ONGOING,
+  ]);
 
   const [search, setSearch] = useState<string>("");
   const [platforms, setPlatforms] = useState<string[]>([]);

@@ -7,7 +7,7 @@ export const useLogin = async (password: string) => {
   try {
     const response = await axios.get(url, {
       headers: {
-        "X-Auth-Password": password,
+        "x-auth-password": password,
       },
       withCredentials: true,
     });
