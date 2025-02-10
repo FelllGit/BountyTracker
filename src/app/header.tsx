@@ -38,7 +38,7 @@ const Header = () => {
       <div className="flex-1 hidden lg:block">
         <DesktopNavigation />
       </div>
-      <div className="flex-1 flex justify-end pr-6 md:pr-0 lg:hidden">
+      <div className="flex-1 flex justify-end md:pr-6 lg:pr-0 lg:hidden">
         <MobileNavigation />
       </div>
     </nav>
