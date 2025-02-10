@@ -3,7 +3,7 @@ import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import { useGetW3SecurityContests } from "@/hooks/useGetW3SecurityContests";
 import { format } from "date-fns";
@@ -35,7 +35,10 @@ const CrowdsourcedAuditsTable = () => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
-  const [statuses, setStatuses] = useState<AuditStatus[]>([]);
+  const [statuses, setStatuses] = useState<AuditStatus[]>([
+    AuditStatus.UPCOMING,
+    AuditStatus.ONGOING,
+  ]);
 
   const [search, setSearch] = useState<string>("");
   const [platforms, setPlatforms] = useState<string[]>([]);
