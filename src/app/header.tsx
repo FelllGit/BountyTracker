@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <nav
-      className={`flex items-center px-4 md:px-10 py-6 border-b-2 !fixed w-screen bg-white z-[100] justify-between`}
+      className={`flex items-center px-4 md:px-10 py-6 border-b-2 !fixed w-screen bg-white z-[100]`}
     >
       <motion.div
         initial={{ scale: 1 }}
@@ -35,13 +35,11 @@ const Header = () => {
         </Button>
       </motion.div>
 
-      <div>
-        <div className="hidden lg:block">
-          <DesktopNavigation />
-        </div>
-        <div className="block pr-6 md:pr-0 lg:hidden">
-          <MobileNavigation />
-        </div>
+      <div className="flex-1 hidden lg:block">
+        <DesktopNavigation />
+      </div>
+      <div className="flex-1 flex justify-end pr-6 md:pr-0 lg:hidden">
+        <MobileNavigation />
       </div>
     </nav>
   );
