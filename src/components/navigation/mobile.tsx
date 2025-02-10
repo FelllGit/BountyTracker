@@ -33,7 +33,7 @@ const MobileNavigation = () => {
       >
         <Icon name="Menu" />
       </SheetTrigger>
-      <SheetContent className="w-2/5 flex flex-col">
+      <SheetContent className="w-3/5 flex flex-col z-[999]">
         <SheetHeader>
           <SheetTitle>Navigation</SheetTitle>
         </SheetHeader>

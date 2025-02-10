@@ -76,3 +76,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+/*@media only screen and (max-width: 600px) {*/
+/*  .rct-header-root > div:first-child {*/
+/*    display: none !important;*/
+/*  }*/
+
+/*  .rct-calendar-header {*/
+/*    width: 100% !important;*/
+/*  }*/
+
+/*  .rct-sidebar {*/
+/*    display: none !important;*/
+/*  }*/
+
+/*  .rct-scroll {*/
+/*    width: 100% !important;*/
+/*  }*/
+/*}*/
