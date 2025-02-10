@@ -24,16 +24,16 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     return <div className="h-24 text-sm text-center">Loading...</div>;
   }
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });
+  const isMobile = useMediaQuery({ maxWidth: 600 });
+  const isTablet = useMediaQuery({ minWidth: 600, maxWidth: 1024 });
 
-  const sidebarWidth = isMobile ? 60 : isTablet ? 100 : 150;
+  const sidebarWidth = isMobile ? 80 : isTablet ? 100 : 150;
 
   const startOfMonth = moment().subtract(1, "week");
   const endOfMonth = moment()
     .add(1, "month")
     .subtract(1, "week")
-    .add(isMobile ? 0 : isTablet ? 5 : 10, "days");
+    .add(isMobile ? -15 : isTablet ? 5 : 10, "days");
 
   const allPlatforms =
     projectsData &&

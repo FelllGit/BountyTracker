@@ -1,26 +1,14 @@
 "use client";
-import Icon from "@/components/icon/icon";
-import { Input } from "@/components/ui/input";
-import DatePicker from "@/components/ui/date-picker";
-import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import { useGetW3SecurityContests } from "@/hooks/useGetW3SecurityContests";
 import { format } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
 import { crowdsourcedAuditsTableColumns } from "@/components/home/CrowdSourcedAudits/CrowdsourcedAuditsTableColumns";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { extractUniquePlatforms } from "@/utils/platformUtils";
 import { extractUniqueLanguages } from "@/utils/languageUtils";
 import { SortingState } from "@tanstack/react-table";
+import Filters from "@/components/ui/filters";
 
 const PAGE_SIZE = 20;
 
@@ -33,8 +21,8 @@ const CrowdsourcedAuditsTable = () => {
   const [page, setPage] = useState(0); // State для сторінки
 
   const [languages, setLanguages] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [statuses, setStatuses] = useState<AuditStatus[]>([
     AuditStatus.UPCOMING,
     AuditStatus.ONGOING,
@@ -161,195 +149,24 @@ const CrowdsourcedAuditsTable = () => {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-3xl font-bold">Explore Crowdsourced Audits Table</p>
-      <div className="flex flex-wrap xl:flex-nowrap gap-2">
-        <div className="relative md:w-56 w-full">
-          <Icon
-            name="Search"
-            className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
-          />
-          <Input
-            type="text"
-            placeholder="Search company"
-            className="pl-10 h-10"
-            value={search}
-            onChange={handleSearchChange}
-          />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 flex-1 max-w-56">
-            <Button variant="outline" className="flex justify-between">
-              <div className="flex gap-2 items-center truncate">
-                <Icon name="SquareFunction" color="grey" />
-                <p
-                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"} truncate`}
-                >
-                  {languages.length > 0
-                    ? languages.join(", ")
-                    : "Select Languages"}{" "}
-                </p>
-              </div>
-              <Icon name="ChevronsUpDown" size={13} color="grey" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Languages</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {allLanguages.map((language) => {
-              const isChecked = languages.includes(language);
-
-              return (
-                <DropdownMenuCheckboxItem
-                  key={language}
-                  checked={isChecked}
-                  onCheckedChange={() => {
-                    setLanguages((currentLanguages) =>
-                      isChecked
-                        ? currentLanguages.filter((lang) => lang !== language)
-                        : [...currentLanguages, language]
-                    );
-                  }}
-                >
-                  {language}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-0">
-              <Button
-                variant="ghost"
-                className="w-full text-left"
-                onClick={() => setLanguages([])}
-              >
-                Clear
-              </Button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 w-full max-w-56 flex-1">
-            <Button
-              variant="outline"
-              className="flex justify-between "
-              title={languages.join(", ")}
-            >
-              <div className="flex w-full gap-2 items-center truncate">
-                <Icon name="Layers" color="grey" />
-                <p
-                  className={`${platforms.length > 0 ? "text-black" : "text-gray-500"} truncate`}
-                >
-                  {platforms.length > 0
-                    ? platforms.join(", ")
-                    : "Select Platforms"}{" "}
-                </p>
-              </div>
-              <Icon name="ChevronsUpDown" size={13} color="grey" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Platforms</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {allPlatforms.map((platform) => {
-              const isChecked = platforms.includes(platform);
-              return (
-                <DropdownMenuCheckboxItem
-                  key={platform}
-                  checked={isChecked}
-                  onCheckedChange={() => {
-                    setPlatforms((currentPlatforms) =>
-                      isChecked
-                        ? currentPlatforms.filter((plat) => plat !== platform)
-                        : [...currentPlatforms, platform]
-                    );
-                  }}
-                >
-                  {platform}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-0">
-              <Button
-                variant="ghost"
-                className="w-full text-left"
-                onClick={() => setPlatforms([])}
-              >
-                Clear
-              </Button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DatePicker
-          startDate={startDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          setStartDate={setStartDate}
-          mode="range"
-          className="md:w-56 flex-1"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="h-10 w-full max-w-56 flex-1">
-            <Button variant="outline" className="flex justify-between">
-              <div className="flex gap-2 items-center truncate">
-                <Icon name="TrendingUp" className="h-fit w-fit" color="grey" />
-                <p
-                  className={`${statuses.length > 0 ? "text-black" : "text-gray-500"} truncate`}
-                >
-                  {statuses.length > 0
-                    ? statuses.join(", ")
-                    : "Select Statuses"}
-                </p>
-              </div>
-              <Icon name="ChevronsUpDown" size={13} color="grey" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Statuses</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {Object.values(AuditStatus).map((status) => {
-              const isChecked = statuses.includes(status);
-              return (
-                <DropdownMenuCheckboxItem
-                  key={status}
-                  checked={isChecked}
-                  onCheckedChange={() => {
-                    setStatuses((currentStatuses) =>
-                      isChecked
-                        ? currentStatuses.filter((s) => s !== status)
-                        : [...currentStatuses, status]
-                    );
-                  }}
-                >
-                  {status}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-0">
-              <Button
-                variant="ghost"
-                className="w-full text-left"
-                onClick={() => setStatuses([])}
-              >
-                Clear
-              </Button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="relative flex-1 md:w-36">
-          <Icon
-            name="HandCoins"
-            className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
-          />
-          <Input
-            type="number"
-            placeholder="Max reward"
-            className="pl-10 h-10"
-            min={0}
-            value={maxReward}
-            onChange={handleMaxRewardChange}
-          />
-        </div>
-      </div>
+      <Filters
+        search={search}
+        handleSearchChange={handleSearchChange}
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        languages={languages}
+        setLanguages={setLanguages}
+        allLanguages={allLanguages}
+        platforms={platforms}
+        setPlatforms={setPlatforms}
+        allPlatforms={allPlatforms}
+        statuses={statuses}
+        setStatuses={setStatuses}
+        maxReward={maxReward}
+        handleMaxRewardChange={handleMaxRewardChange}
+      />
       <DataTable
         columns={crowdsourcedAuditsTableColumns}
         data={displayedData}

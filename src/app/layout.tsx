@@ -49,10 +49,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen !min-w-full`}
       >
-        <LandscapeMode />
+        {/*<LandscapeMode />*/}
         <Providers>
           <Header />
-          <main className="max-w-full flex-grow flex flex-col p-10 px-12 xl:px-44 mt-16">
+          <main className="max-w-full flex-grow flex flex-col p-10 px-2 md:px-16 2xl:px-44 mt-16">
             {children}
           </main>
           {/*<Footer />*/}

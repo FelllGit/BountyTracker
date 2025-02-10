@@ -1,8 +1,4 @@
 "use client";
-import Icon from "@/components/icon/icon";
-import { Input } from "@/components/ui/input";
-import DatePicker from "@/components/ui/date-picker";
-import { Button } from "@/components/ui/button";
 import GanttChart from "@/components/charts/ganttChart";
 import { useEffect, useRef, useState } from "react";
 import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
@@ -10,17 +6,9 @@ import { format } from "date-fns";
 import { useGetW3SecurityContests } from "@/hooks/useGetW3SecurityContests";
 import image from "./../../../media/img/VigilSeek_logo.png";
 import ExportButton from "@/components/home/CrowdSourcedAudits/ExportButton";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { extractUniqueLanguages } from "@/utils/languageUtils";
 import { extractUniquePlatforms } from "@/utils/platformUtils";
+import Filters from "@/components/ui/filters";
 
 const CrowdsourcedAudits = () => {
   const imgRef = useRef<HTMLDivElement>(null);
@@ -29,8 +17,10 @@ const CrowdsourcedAudits = () => {
   const [chartHeight, setChartHeight] = useState<number>(0);
 
   const [languages, setLanguages] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+  // Замість Date | undefined – використовуємо Date | null
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  // Для statuses залишаємо AuditStatus[] (якщо Filters теж працює з AuditStatus)
   const [statuses, setStatuses] = useState<AuditStatus[]>([
     AuditStatus.UPCOMING,
     AuditStatus.ONGOING,
@@ -38,6 +28,7 @@ const CrowdsourcedAudits = () => {
 
   const [search, setSearch] = useState<string>("");
   const [platforms, setPlatforms] = useState<string[]>([]);
+  // Якщо maxReward може бути undefined – вкажіть тип number | undefined
   const [maxReward, setMaxReward] = useState<number | undefined>();
 
   const {
@@ -92,8 +83,11 @@ const CrowdsourcedAudits = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    if (+value < 0) setMaxReward(undefined);
-    setMaxReward(value === "" ? undefined : Number(value));
+    if (+value < 0) {
+      setMaxReward(undefined);
+    } else {
+      setMaxReward(value === "" ? undefined : Number(value));
+    }
   };
 
   return (
@@ -106,7 +100,6 @@ const CrowdsourcedAudits = () => {
           left: "-99999px",
           top: "-99999px",
           width: chartRef.current?.offsetWidth,
-          // height: chartRef.current?.offsetHeight,
         }}
       >
         <div>
@@ -140,209 +133,24 @@ const CrowdsourcedAudits = () => {
         <p className="text-3xl font-bold">
           Explore Crowdsourced Audits Timeline
         </p>
-        <div className="flex flex-wrap xl:flex-nowrap gap-2">
-          <div className="relative md:w-56 w-full">
-            <Icon
-              name="Search"
-              className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
-            />
-            <Input
-              type="text"
-              placeholder="Search company"
-              className="pl-10 h-10"
-              value={search}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className="h-10 flex-1 max-w-56">
-              <Button variant="outline" className="flex justify-between">
-                <div className="flex gap-2 items-center truncate">
-                  <Icon name="SquareFunction" color="grey" />
-                  <p
-                    className={`${languages.length > 0 ? "text-black" : "text-gray-500"} truncate`}
-                  >
-                    {languages.length > 0
-                      ? languages.join(", ")
-                      : "Select Languages"}{" "}
-                  </p>
-                </div>
-                <Icon name="ChevronsUpDown" size={13} color="grey" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Languages</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <div className="max-h-64 overflow-y-scroll">
-                {allLanguages.map((language) => {
-                  const isChecked = languages.includes(language);
-
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={language}
-                      checked={isChecked}
-                      onCheckedChange={() => {
-                        setLanguages((currentLanguages) =>
-                          isChecked
-                            ? currentLanguages.filter(
-                                (lang) => lang !== language
-                              )
-                            : [...currentLanguages, language]
-                        );
-                      }}
-                    >
-                      {language}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="p-0">
-                <Button
-                  variant="ghost"
-                  className="w-full text-left"
-                  onClick={() => setLanguages([])}
-                >
-                  Clear
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              asChild
-              className="h-10 w-full max-w-56 flex-1"
-            >
-              <Button
-                variant="outline"
-                className="flex justify-between "
-                title={languages.join(", ")}
-              >
-                <div className="flex w-full gap-2 items-center truncate">
-                  <Icon name="Layers" color="grey" />
-                  <p
-                    className={`${platforms.length > 0 ? "text-black" : "text-gray-500"} truncate`}
-                  >
-                    {platforms.length > 0
-                      ? platforms.join(", ")
-                      : "Select Platforms"}{" "}
-                  </p>
-                </div>
-                <Icon name="ChevronsUpDown" size={13} color="grey" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Platforms</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {allPlatforms.map((platform) => {
-                const isChecked = platforms.includes(platform);
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={platform}
-                    checked={isChecked}
-                    onCheckedChange={() => {
-                      setPlatforms((currentPlatforms) =>
-                        isChecked
-                          ? currentPlatforms.filter((plat) => plat !== platform)
-                          : [...currentPlatforms, platform]
-                      );
-                    }}
-                  >
-                    {platform}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="p-0">
-                <Button
-                  variant="ghost"
-                  className="w-full text-left"
-                  onClick={() => setPlatforms([])}
-                >
-                  Clear
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DatePicker
-            startDate={startDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            setStartDate={setStartDate}
-            mode="range"
-            className="md:w-56 flex-1"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              asChild
-              className="h-10 w-full max-w-56 flex-1"
-            >
-              <Button variant="outline" className="flex justify-between">
-                <div className="flex gap-2 items-center truncate">
-                  <Icon
-                    name="TrendingUp"
-                    className="h-fit w-fit"
-                    color="grey"
-                  />
-                  <p
-                    className={`${statuses.length > 0 ? "text-black" : "text-gray-500"} truncate`}
-                  >
-                    {statuses.length > 0
-                      ? statuses.join(", ")
-                      : "Select Statuses"}
-                  </p>
-                </div>
-                <Icon name="ChevronsUpDown" size={13} color="grey" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Statuses</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {Object.values(AuditStatus).map((status) => {
-                const isChecked = statuses.includes(status);
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={status}
-                    checked={isChecked}
-                    onCheckedChange={() => {
-                      setStatuses((currentStatuses) =>
-                        isChecked
-                          ? currentStatuses.filter((s) => s !== status)
-                          : [...currentStatuses, status]
-                      );
-                    }}
-                  >
-                    {status}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="p-0">
-                <Button
-                  variant="ghost"
-                  className="w-full text-left"
-                  onClick={() => setStatuses([])}
-                >
-                  Clear
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <div className="relative flex-1 md:w-36">
-            <Icon
-              name="HandCoins"
-              className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
-            />
-            <Input
-              type="number"
-              placeholder="Max reward"
-              className="pl-10 h-10"
-              min={0}
-              value={maxReward}
-              onChange={handleMaxRewardChange}
-            />
-          </div>
-        </div>
+        <Filters
+          search={search}
+          handleSearchChange={handleSearchChange}
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          languages={languages}
+          setLanguages={setLanguages}
+          allLanguages={allLanguages}
+          platforms={platforms}
+          setPlatforms={setPlatforms}
+          allPlatforms={allPlatforms}
+          statuses={statuses}
+          setStatuses={setStatuses}
+          maxReward={maxReward}
+          handleMaxRewardChange={handleMaxRewardChange}
+        />
         {(!isLoading || !error) && projectsData && (
           <ExportButton
             imgRef={imgRef}
@@ -359,7 +167,7 @@ const CrowdsourcedAudits = () => {
             />
           </div>
           {!isLoading && !error && chartHeight >= 151 && (
-            <div className="absolute top-[calc(50%+31px)] right-[14rem] pointer-events-none flex items-center justify-center">
+            <div className="absolute top-[calc(50%+31px)] right-[7rem] md:right-[14rem] pointer-events-none flex items-center justify-center scale-[0.5] md:scale-100">
               <div className="absolute pointer-events-none flex items-center justify-center z-10">
                 <div className="flex items-center max-w-[800px] w-full">
                   <div className="relative w-[120px] h-[120px]">
