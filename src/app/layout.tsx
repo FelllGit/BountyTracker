@@ -6,7 +6,6 @@ import Header from "@/app/header";
 // import Footer from "@/app/footer";
 import { Providers } from "@/app/providers";
 import "./app.css";
-import LandscapeMode from "@/components/home/LandscapeMode";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -49,7 +48,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen !min-w-full`}
       >
-        {/*<LandscapeMode />*/}
         <Providers>
           <Header />
           <main className="max-w-full flex-grow flex flex-col p-10 px-2 md:px-16 2xl:px-44 mt-16">
