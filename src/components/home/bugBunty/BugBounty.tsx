@@ -9,6 +9,7 @@ import { extractUniqueLanguages } from "@/utils/languageUtils";
 import { SortingState } from "@tanstack/react-table";
 import Filters from "@/components/ui/filters";
 import { DataTable } from "@/components/ui/data-table";
+import { useSavedFilters } from "@/utils/savedFilters";
 
 const PAGE_SIZE = 20;
 
@@ -20,12 +21,17 @@ const BugBountyTable = () => {
   const loader = useRef(null);
   const [page, setPage] = useState(0);
 
-  const [languages, setLanguages] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  const { filters, setFilters } = useSavedFilters("bug-bounty-filters");
+  const [languages, setLanguages] = useState<string[]>(filters.languages || []);
+  const [startDate, setStartDate] = useState<Date | null>(
+    filters.startDate ? new Date(filters.startDate) : null
+  );
 
-  const [search, setSearch] = useState<string>("");
-  const [platforms, setPlatforms] = useState<string[]>([]);
-  const [maxReward, setMaxReward] = useState<number | undefined>();
+  const [search, setSearch] = useState<string>(filters.search || "");
+  const [platforms, setPlatforms] = useState<string[]>(filters.platforms || []);
+  const [maxReward, setMaxReward] = useState<number | undefined>(
+    filters.maxReward
+  );
 
   const {
     data: bugBounties,
@@ -41,6 +47,16 @@ const BugBountyTable = () => {
 
   const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
   const [allLanguages, setAllLanguages] = useState<string[]>([]);
+
+  useEffect(() => {
+    setFilters({
+      languages,
+      startDate: startDate?.toISOString() ? startDate : null,
+      search,
+      platforms,
+      maxReward,
+    });
+  }, [languages, startDate, search, platforms, maxReward, setFilters]);
 
   function sortData(data: BugBounty[], sorting: SortingState) {
     if (sorting.length === 0) return data;

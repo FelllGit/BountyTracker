@@ -9,6 +9,7 @@ import ExportButton from "@/components/home/CrowdSourcedAudits/ExportButton";
 import { extractUniqueLanguages } from "@/utils/languageUtils";
 import { extractUniquePlatforms } from "@/utils/platformUtils";
 import Filters from "@/components/ui/filters";
+import { useSavedFilters } from "@/utils/savedFilters";
 
 const CrowdsourcedAudits = () => {
   const imgRef = useRef<HTMLDivElement>(null);
@@ -16,20 +17,48 @@ const CrowdsourcedAudits = () => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartHeight, setChartHeight] = useState<number>(0);
 
-  const [languages, setLanguages] = useState<string[]>([]);
-  // Замість Date | undefined – використовуємо Date | null
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  // Для statuses залишаємо AuditStatus[] (якщо Filters теж працює з AuditStatus)
-  const [statuses, setStatuses] = useState<AuditStatus[]>([
-    AuditStatus.UPCOMING,
-    AuditStatus.ONGOING,
-  ]);
+  const { filters, setFilters } = useSavedFilters(
+    "crowdsourced-audits-gantt-filters"
+  );
 
-  const [search, setSearch] = useState<string>("");
-  const [platforms, setPlatforms] = useState<string[]>([]);
-  // Якщо maxReward може бути undefined – вкажіть тип number | undefined
-  const [maxReward, setMaxReward] = useState<number | undefined>();
+  // Initialize state with saved filters or defaults
+  const [languages, setLanguages] = useState<string[]>(filters.languages || []);
+  const [startDate, setStartDate] = useState<Date | null>(
+    filters.startDate ? new Date(filters.startDate) : null
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    filters.endDate ? new Date(filters.endDate) : null
+  );
+  const [statuses, setStatuses] = useState<AuditStatus[]>(
+    filters.statuses || [AuditStatus.UPCOMING, AuditStatus.ONGOING]
+  );
+  const [search, setSearch] = useState<string>(filters.search || "");
+  const [platforms, setPlatforms] = useState<string[]>(filters.platforms || []);
+  const [maxReward, setMaxReward] = useState<number | undefined>(
+    filters.maxReward
+  );
+
+  // Update saved filters whenever any filter changes
+  useEffect(() => {
+    setFilters({
+      languages,
+      startDate: startDate?.toISOString() ? startDate : null,
+      endDate: endDate?.toISOString() ? endDate : null,
+      statuses,
+      search,
+      platforms,
+      maxReward,
+    });
+  }, [
+    languages,
+    startDate,
+    endDate,
+    statuses,
+    search,
+    platforms,
+    maxReward,
+    setFilters,
+  ]);
 
   const {
     data: projectsData,
@@ -92,7 +121,6 @@ const CrowdsourcedAudits = () => {
 
   return (
     <>
-      {/* Прихований компонент з водяним знаком для експорту маленьких діаграм */}
       <div
         ref={watermarkRef}
         style={{

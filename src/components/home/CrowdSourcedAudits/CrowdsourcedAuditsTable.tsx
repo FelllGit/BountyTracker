@@ -9,6 +9,7 @@ import { extractUniquePlatforms } from "@/utils/platformUtils";
 import { extractUniqueLanguages } from "@/utils/languageUtils";
 import { SortingState } from "@tanstack/react-table";
 import Filters from "@/components/ui/filters";
+import { useSavedFilters } from "@/utils/savedFilters";
 
 const PAGE_SIZE = 20;
 
@@ -17,20 +18,30 @@ const CrowdsourcedAuditsTable = () => {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "startDate", desc: true },
   ]);
+
+  const { filters, setFilters } = useSavedFilters(
+    "crowdsourced-audits-filters"
+  );
+
   const loader = useRef(null); // Ref для елемента завантаження
   const [page, setPage] = useState(0); // State для сторінки
 
-  const [languages, setLanguages] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [statuses, setStatuses] = useState<AuditStatus[]>([
-    AuditStatus.UPCOMING,
-    AuditStatus.ONGOING,
-  ]);
+  const [languages, setLanguages] = useState<string[]>(filters.languages || []);
+  const [startDate, setStartDate] = useState<Date | null>(
+    filters.startDate ? new Date(filters.startDate) : null
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    filters.endDate ? new Date(filters.endDate) : null
+  );
+  const [statuses, setStatuses] = useState<AuditStatus[]>(
+    filters.statuses || [AuditStatus.UPCOMING, AuditStatus.ONGOING]
+  );
 
-  const [search, setSearch] = useState<string>("");
-  const [platforms, setPlatforms] = useState<string[]>([]);
-  const [maxReward, setMaxReward] = useState<number | undefined>();
+  const [search, setSearch] = useState<string>(filters.search || "");
+  const [platforms, setPlatforms] = useState<string[]>(filters.platforms || []);
+  const [maxReward, setMaxReward] = useState<number | undefined>(
+    filters.maxReward
+  );
 
   const { data: projectsData, isLoading } = useGetW3SecurityContests(
     search,
@@ -44,6 +55,27 @@ const CrowdsourcedAuditsTable = () => {
 
   const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
   const [allLanguages, setAllLanguages] = useState<string[]>([]);
+
+  useEffect(() => {
+    setFilters({
+      languages,
+      startDate: startDate?.toISOString() ? startDate : null,
+      endDate: endDate?.toISOString() ? endDate : null,
+      statuses,
+      search,
+      platforms,
+      maxReward,
+    });
+  }, [
+    languages,
+    startDate,
+    endDate,
+    statuses,
+    search,
+    platforms,
+    maxReward,
+    setFilters,
+  ]);
 
   function sortData(data: CrowdsourcedAudit[], sorting: SortingState) {
     if (sorting.length === 0) return data;
