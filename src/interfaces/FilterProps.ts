@@ -1,5 +1,3 @@
-"use client";
-
 import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
 
 export interface FiltersProps {
