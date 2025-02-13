@@ -1,20 +1,39 @@
 import { useEffect, useState } from "react";
 
 export function useTheme() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") === "dark" ? "dark" : "light";
-    }
-    return "light";
-  });
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
 
   useEffect(() => {
-    if (theme === "dark") {
+    const savedTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    const initialTheme: "light" | "dark" =
+      savedTheme === "light" || savedTheme === "dark"
+        ? savedTheme
+        : systemPrefersDark
+          ? "dark"
+          : "light";
+
+    setTheme(initialTheme);
+
+    if (initialTheme === "dark") {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (theme !== null) {
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
     }
   }, [theme]);
 
