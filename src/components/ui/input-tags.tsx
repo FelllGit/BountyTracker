@@ -50,7 +50,7 @@ const InputTags = React.forwardRef<HTMLInputElement, InputTagsProps>(
         {icon && (
           <Icon
             name={icon}
-            className="absolute left-3 top-[18px] h-5 w-5 -translate-y-1/2 text-gray-400 pointer-events-none z-10"
+            className="absolute left-3 top-[18px] h-5 w-5 -translate-y-1/2 text-card-foreground pointer-events-none z-10"
           />
         )}
         <div
@@ -68,7 +68,7 @@ const InputTags = React.forwardRef<HTMLInputElement, InputTagsProps>(
               <Badge
                 key={item}
                 variant="secondary"
-                className="bg-gray-200 text-gray-700 whitespace-nowrap flex-shrink-0"
+                className="bg-gray-200 text-card-foreground whitespace-nowrap flex-shrink-0"
               >
                 {item}
                 <Button
@@ -85,7 +85,7 @@ const InputTags = React.forwardRef<HTMLInputElement, InputTagsProps>(
             ))}
             <input
               ref={inputRef}
-              className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground min-w-[70px] h-full"
+              className="flex-1 bg-transparent outline-none placeholder:text-card-foreground min-w-[70px] h-full"
               value={pendingDataPoint}
               onChange={(e) => setPendingDataPoint(e.target.value)}
               onKeyDown={(e) => {

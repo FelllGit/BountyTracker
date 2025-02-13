@@ -61,7 +61,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
             languages.map((lang, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-slate-100 rounded-full text-xs"
+                className="px-2 py-1 bg-secondary rounded-full text-xs"
               >
                 {lang}
               </span>

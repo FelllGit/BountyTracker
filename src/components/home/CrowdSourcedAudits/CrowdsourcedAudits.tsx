@@ -195,7 +195,7 @@ const CrowdsourcedAudits = () => {
             />
           </div>
           {!isLoading && !error && chartHeight >= 151 && (
-            <div className="absolute top-[calc(50%+31px)] right-[7rem] md:right-[14rem] pointer-events-none flex items-center justify-center scale-[0.5] md:scale-100">
+            <div className="absolute top-[calc(50%+31px)] right-[7rem] md:right-[14rem] pointer-events-none flex items-center justify-center scale-[0.5] md:scale-100 dark:invert">
               <div className="absolute pointer-events-none flex items-center justify-center z-10">
                 <div className="flex items-center max-w-[800px] w-full">
                   <div className="relative w-[120px] h-[120px]">
