@@ -38,7 +38,11 @@ const DesktopNavigation = () => {
         {/*</Button>*/}
         <div className="font-bold text-3xl flex gap-2 items-center">
           <p className="text-sm text-primary">Light</p>
-          <Switch checked={theme === "dark"} onCheckedChange={toggleTheme} />
+          <Switch
+            checked={theme === "dark"}
+            onCheckedChange={toggleTheme}
+            disabled={theme === null}
+          />
           <p className="text-sm text-muted-foreground">Dark</p>
         </div>
         <Separator orientation="vertical" />
