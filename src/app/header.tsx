@@ -16,7 +16,18 @@ const Header = () => {
     >
       <motion.div
         initial={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
+        whileHover={{
+          x: [0, -6, 6, -6, 6, 0],
+          transition: {
+            duration: 0.3,
+            repeat: Infinity,
+            repeatType: "mirror",
+            repeatDelay: 0.5,
+          },
+          backgroundColor: "yellow",
+          filter: "invert(1)",
+          // scale: 1.1,
+        }}
         className="mx-[-2rem] md:mx-0"
       >
         <Button
