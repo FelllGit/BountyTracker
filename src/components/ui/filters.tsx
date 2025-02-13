@@ -71,7 +71,7 @@ const FiltersContent: React.FC<FiltersProps> = ({
       <div className="relative w-full">
         <Icon
           name="Search"
-          className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
+          className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-card-foreground z-10"
         />
         <Input
           type="text"
@@ -88,16 +88,20 @@ const FiltersContent: React.FC<FiltersProps> = ({
           <DropdownMenuTrigger asChild className="h-10 w-full">
             <Button variant="outline" className="flex justify-between w-full">
               <div className="flex gap-2 items-center truncate">
-                <Icon name="SquareFunction" color="grey" />
+                <Icon name="SquareFunction" className="text-card-foreground" />
                 <p
-                  className={`${languages.length > 0 ? "text-black" : "text-gray-500"} truncate`}
+                  className={`${languages.length > 0 ? "text-accent-foreground" : "text-card-foreground"} truncate`}
                 >
                   {languages.length > 0
                     ? languages.join(", ")
                     : "Select Languages"}
                 </p>
               </div>
-              <Icon name="ChevronsUpDown" size={13} color="grey" />
+              <Icon
+                name="ChevronsUpDown"
+                size={13}
+                className="text-card-foreground"
+              />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -143,16 +147,20 @@ const FiltersContent: React.FC<FiltersProps> = ({
           <DropdownMenuTrigger asChild className="h-10 w-full">
             <Button variant="outline" className="flex justify-between w-full">
               <div className="flex gap-2 items-center truncate">
-                <Icon name="Layers" color="grey" />
+                <Icon name="Layers" className="text-card-foreground" />
                 <p
-                  className={`${platforms.length > 0 ? "text-black" : "text-gray-500"} truncate`}
+                  className={`${platforms.length > 0 ? "text-accent-foreground" : "text-card-foreground"} truncate`}
                 >
                   {platforms.length > 0
                     ? platforms.join(", ")
                     : "Select Platforms"}
                 </p>
               </div>
-              <Icon name="ChevronsUpDown" size={13} color="grey" />
+              <Icon
+                name="ChevronsUpDown"
+                size={13}
+                className="text-card-foreground"
+              />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -211,18 +219,21 @@ const FiltersContent: React.FC<FiltersProps> = ({
                 <div className="flex gap-2 items-center truncate">
                   <Icon
                     name="TrendingUp"
-                    className="h-fit w-fit"
-                    color="grey"
+                    className="h-fit w-fit text-card-foreground"
                   />
                   <p
-                    className={`${statuses.length > 0 ? "text-black" : "text-gray-500"} truncate`}
+                    className={`${statuses.length > 0 ? "text-accent-foreground" : "text-card-foreground"} truncate`}
                   >
                     {statuses.length > 0
                       ? statuses.join(", ")
                       : "Select Statuses"}
                   </p>
                 </div>
-                <Icon name="ChevronsUpDown" size={13} color="grey" />
+                <Icon
+                  name="ChevronsUpDown"
+                  size={13}
+                  className="text-card-foreground"
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
@@ -265,7 +276,7 @@ const FiltersContent: React.FC<FiltersProps> = ({
       <div className="relative w-full">
         <Icon
           name="HandCoins"
-          className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-gray-400 z-10"
+          className="absolute left-3 top-[17px] h-5 w-5 -translate-y-1/2 text-card-foreground z-10"
         />
         <Input
           type="number"

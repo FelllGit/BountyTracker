@@ -12,6 +12,7 @@ import "react-calendar-timeline/lib/Timeline.css";
 import { CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import { useMediaQuery } from "react-responsive";
 import CustomItemRenderer from "@/components/charts/customItemRenderer";
+import { useEffect, useState } from "react";
 
 interface IGanttChartProps {
   projectsData: CrowdsourcedAudit[] | undefined;
@@ -20,9 +21,9 @@ interface IGanttChartProps {
 }
 
 const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
-  if (!projectsData) {
-    return <div className="h-24 text-sm text-center">Loading...</div>;
-  }
+  const [platformColors, setPlatformColors] = useState<Record<string, string>>(
+    {}
+  );
 
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const isTablet = useMediaQuery({ minWidth: 600, maxWidth: 1024 });
@@ -47,15 +48,34 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     stackItems: true,
   })) as TimelineGroupBase[];
 
-  const platformColors: Record<string, string> = {
-    HackenProof: "#871787",
-    Cantina: "#fa540a",
-    Immunefi: "#EB3678",
-    Sherlock: "#240293",
-    code4rena: "#7549FF",
-    CodeHawks: "#Ef5B69",
-    HatsFinance: "#24E7C5",
+  const updateColors = () => {
+    const styles = getComputedStyle(document.documentElement);
+    setPlatformColors({
+      HackenProof: styles.getPropertyValue("--hackenProof").trim(),
+      Cantina: styles.getPropertyValue("--cantina").trim(),
+      Immunefi: styles.getPropertyValue("--immunefi").trim(),
+      Sherlock: styles.getPropertyValue("--sherlock").trim(),
+      code4rena: styles.getPropertyValue("--code4rena").trim(),
+      CodeHawks: styles.getPropertyValue("--codeHawks").trim(),
+      HatsFinance: styles.getPropertyValue("--hatsFinance").trim(),
+    });
   };
+
+  useEffect(() => {
+    updateColors();
+
+    const observer = new MutationObserver(updateColors);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!projectsData || !platformColors) {
+    return <div className="h-24 text-sm text-center">Loading...</div>;
+  }
 
   const groupColors: Record<number, string> = groups.reduce(
     (acc: Record<number, string>, group: TimelineGroupBase) => {
@@ -106,6 +126,9 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     <div className="timeline-container">
       <Timeline
         groups={groups}
+        groupRenderer={(prop) => (
+          <p className={"text-card-foreground"}>{prop.group.title}</p>
+        )}
         items={items}
         traditionalZoom={true}
         defaultTimeStart={startOfMonth}
@@ -125,20 +148,25 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
             return <div style={customStyles} />;
           }}
         </CustomMarker>
-        <TimelineHeaders className="!bg-transparent">
-          <DateHeader unit="month" className="*:!bg-white *:!text-base" />
+        <TimelineHeaders className="!bg-transparent border-border *:border-border">
+          <DateHeader
+            unit="month"
+            className="*:!bg-background *:!border-border !border-border *:!text-card-foreground"
+          />
           <DateHeader
             unit="day"
-            className="*:!bg-[#ADADAD] *:!text-white *:!text-sm whitespace-nowrap"
+            className="*:!bg-[#ADADAD] dark:*:!bg-[#464C4F] *:!border-border *:!text-white *:!text-sm whitespace-nowrap"
           />
         </TimelineHeaders>
       </Timeline>
       <style jsx global>{`
         .react-calendar-timeline .rct-header-root {
           font-size: 14px;
+          border-color: var(--border) !important;
         }
         .react-calendar-timeline .rct-sidebar {
           font-size: 14px;
+          border-color: var(--border) !important;
         }
       `}</style>
     </div>

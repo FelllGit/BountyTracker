@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <nav
-      className={`flex items-center px-4 md:px-10 py-6 border-b-2 !fixed w-screen bg-white z-[100]`}
+      className={`flex items-center px-4 md:px-10 py-6 border-b-2 !fixed w-screen bg-background z-[100]`}
     >
       <motion.div
         initial={{ scale: 1 }}
@@ -21,11 +21,12 @@ const Header = () => {
       >
         <Button
           variant="logo"
-          className="text-xl font-bold flex items-center"
+          className="text-xl font-bold flex items-center text-foreground"
           onClick={() => router.push("/")}
         >
           <Image
             src={image}
+            className="dark:invert"
             alt="Logo"
             width={64}
             height={64}

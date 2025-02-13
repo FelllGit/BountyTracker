@@ -54,7 +54,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal h-10 w-56",
-            (!startDate || !endDate) && "text-muted-foreground",
+            !startDate && !endDate && "text-card-foreground",
             className
           )}
         >

@@ -8,9 +8,46 @@ root, html, body {
   font-weight: bold;
 }
 
+.rct-calendar-header {
+  border-color: hsl(var(--border)) !important;
+}
+
+.react-calendar-timeline {
+  border-color: hsl(var(--border)) !important;
+}
+
+.react-calendar-timeline .rct-header-root {
+  color: hsl(var(--border)) !important;
+}
+
+.rct-sidebar-row {
+}
+
+.rct-sidebar {
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--border)) !important;
+}
+
+.react-calendar-timeline .rct-sidebar .rct-sidebar-row {
+  border-color: hsl(var(--border)) !important;
+}
+
+.rct-vl {
+  border-color: hsl(var(--border)) !important;
+}
+
 .rct-vl.rct-day-6,
 .rct-vl.rct-day-0 {
   background-color: transparent !important;
+}
+
+.rct-scroll{
+  border-color: hsl(var(--border)) !important;
+  background-color: transparent !important;
+}
+
+.react-calendar-timeline .rct-horizontal-lines .rct-hl-even, .react-calendar-timeline .rct-horizontal-lines .rct-hl-odd {
+  border-color: hsl(var(--border)) !important;
 }
 
 .react-calendar-timeline .rct-item .rct-item-content {

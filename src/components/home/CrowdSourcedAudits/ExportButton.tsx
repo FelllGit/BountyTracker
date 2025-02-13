@@ -35,7 +35,7 @@ const ExportButton = ({
   };
 
   return (
-    <Button onClick={handleExport} disabled={isExporting}>
+    <Button onClick={handleExport} variant="secondary" disabled={isExporting}>
       {isExporting ? "Exporting..." : "Export As PNG"}
     </Button>
   );
