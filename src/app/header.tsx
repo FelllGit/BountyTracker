@@ -6,11 +6,9 @@ import image from "@/media/img/VigilSeek_logo.png";
 import DesktopNavigation from "@/components/navigation/desktop";
 import MobileNavigation from "@/components/navigation/mobile";
 import { useRouter } from "next/navigation";
-import { useLogoHoverStore } from "@/stores/useLogoHoverStore";
 
 const Header = () => {
   const router = useRouter();
-  const { setHovered } = useLogoHoverStore();
 
   return (
     <nav
@@ -22,8 +20,6 @@ const Header = () => {
           scale: 1.1,
         }}
         className="mx-[-2rem] md:mx-0"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
       >
         <Button
           variant="logo"
