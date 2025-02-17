@@ -1,8 +1,17 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { ReactCalendarItemRendererProps } from "react-calendar-timeline";
+import {
+  ReactCalendarItemRendererProps,
+  TimelineGroupBase,
+} from "react-calendar-timeline";
+import { motion } from "framer-motion";
 
 interface CustomCSSProperties extends React.CSSProperties {
   "--scroll-duration"?: string;
+  groups: TimelineGroupBase[];
+}
+
+interface CustomItemRendererProps extends ReactCalendarItemRendererProps {
+  groups: TimelineGroupBase[];
 }
 
 const CustomItemRenderer = ({
@@ -10,12 +19,15 @@ const CustomItemRenderer = ({
   itemContext,
   getItemProps,
   getResizeProps,
-}: ReactCalendarItemRendererProps) => {
+  groups,
+}: CustomItemRendererProps) => {
   const { left: leftResizeProps, right: rightResizeProps } = getResizeProps();
   const itemProps = getItemProps(item.itemProps ?? {});
   const textRef = useRef<HTMLDivElement>(null);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [scrollDuration, setScrollDuration] = useState("10s");
+  const groupName =
+    groups.find((group) => group.id === item.group)?.title || "";
 
   useLayoutEffect(() => {
     const checkOverflow = () => {
@@ -25,7 +37,6 @@ const CustomItemRenderer = ({
 
         if (textWidth > containerWidth) {
           setShouldAnimate(true);
-
           const speed = 50;
           const duration = (textWidth + containerWidth) / speed;
           setScrollDuration(`${duration}s`);
@@ -54,9 +65,19 @@ const CustomItemRenderer = ({
   }, [item.title, textRef]);
 
   return (
-    <div
+    <motion.div
       {...itemProps}
       className={shouldAnimate ? "overflow-x-hidden !z-50" : "!z-50"}
+      whileHover={
+        groupName === "Cantina"
+          ? {
+              x: [0, -12, 12, -12, 12, 0],
+              transition: {
+                duration: 0.4,
+              },
+            }
+          : {}
+      }
     >
       {itemContext.useResizeHandle && <div {...leftResizeProps} />}
       <div
@@ -72,7 +93,7 @@ const CustomItemRenderer = ({
         <div className={shouldAnimate ? "animate-text" : ""}>{item.title}</div>
       </div>
       {itemContext.useResizeHandle && <div {...rightResizeProps} />}
-    </div>
+    </motion.div>
   );
 };
 
