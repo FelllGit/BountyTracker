@@ -136,7 +136,9 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         lineHeight={25}
         itemHeightRatio={0.8}
         sidebarWidth={sidebarWidth}
-        itemRenderer={(props) => <CustomItemRenderer {...props} />}
+        itemRenderer={(props) => (
+          <CustomItemRenderer {...props} groups={groups} />
+        )}
       >
         <CustomMarker date={moment().toDate()}>
           {({ styles }) => {

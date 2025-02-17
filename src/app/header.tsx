@@ -6,9 +6,11 @@ import image from "@/media/img/VigilSeek_logo.png";
 import DesktopNavigation from "@/components/navigation/desktop";
 import MobileNavigation from "@/components/navigation/mobile";
 import { useRouter } from "next/navigation";
+import { useLogoHoverStore } from "@/stores/useLogoHoverStore";
 
 const Header = () => {
   const router = useRouter();
+  const { setHovered } = useLogoHoverStore();
 
   return (
     <nav
@@ -17,18 +19,11 @@ const Header = () => {
       <motion.div
         initial={{ scale: 1 }}
         whileHover={{
-          x: [0, -6, 6, -6, 6, 0],
-          transition: {
-            duration: 0.3,
-            repeat: Infinity,
-            repeatType: "mirror",
-            repeatDelay: 0.5,
-          },
-          backgroundColor: "yellow",
-          filter: "invert(1)",
-          // scale: 1.1,
+          scale: 1.1,
         }}
         className="mx-[-2rem] md:mx-0"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
         <Button
           variant="logo"
