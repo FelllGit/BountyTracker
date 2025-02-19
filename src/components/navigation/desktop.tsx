@@ -23,11 +23,17 @@ const DesktopNavigation = () => {
   const [decoded, setDecoded] = useState<CustomJwtPayload | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    const handleJwtUpdate = () => {
       const storedJwt = localStorage.getItem("jwt");
       setJwt(storedJwt);
       setDecoded(storedJwt ? (jwtDecode(storedJwt) as CustomJwtPayload) : null);
-    }
+    };
+
+    window.addEventListener("jwt-updated", handleJwtUpdate);
+
+    return () => {
+      window.removeEventListener("jwt-updated", handleJwtUpdate);
+    };
   }, []);
 
   const loginWithGoogle = () => {

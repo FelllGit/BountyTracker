@@ -11,10 +11,13 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ImTelegram } from "react-icons/im";
 import { BsTwitterX } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/utils/useTheme";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
+import { jwtDecode } from "jwt-decode";
 
 const MobileNavigation = () => {
   const router = useRouter();
@@ -24,6 +27,34 @@ const MobileNavigation = () => {
 
   const tgUrl = process.env.NEXT_PUBLIC_TG_URL;
   const xUrl = process.env.NEXT_PUBLIC_X_URL;
+
+  const [jwt, setJwt] = useState<string | null>(null);
+  const [decoded, setDecoded] = useState<CustomJwtPayload | null>(null);
+
+  useEffect(() => {
+    const handleJwtUpdate = () => {
+      const storedJwt = localStorage.getItem("jwt");
+      setJwt(storedJwt);
+      setDecoded(storedJwt ? (jwtDecode(storedJwt) as CustomJwtPayload) : null);
+    };
+
+    window.addEventListener("jwt-updated", handleJwtUpdate);
+
+    return () => {
+      window.removeEventListener("jwt-updated", handleJwtUpdate);
+    };
+  }, []);
+
+  const loginWithGoogle = () => {
+    window.location.href = "https://api.vigilseek.com/auth/google/login";
+  };
+
+  const logout = () => {
+    localStorage.removeItem("jwt");
+    setJwt(null);
+    setDecoded(null);
+    router.refresh();
+  };
 
   const handleRouter = (path: string) => {
     router.push(path);
@@ -75,6 +106,31 @@ const MobileNavigation = () => {
               {/*<Button variant="secondary" className="font-bold">*/}
               {/*  Email Subscription*/}
               {/*</Button>*/}
+              {jwt ? (
+                <Button
+                  variant="secondary"
+                  className="font-bold uppercase rounded-xl flex gap-2 px-2"
+                  onClick={logout}
+                >
+                  <Image
+                    src={decoded?.picture || ""}
+                    alt="User logo"
+                    width={24}
+                    height={24}
+                    className="rounded-[0.375rem]"
+                    referrerPolicy="no-referrer"
+                  />
+                  <p>Logout</p>
+                </Button>
+              ) : (
+                <Button
+                  variant="secondary"
+                  className="font-bold uppercase rounded-xl"
+                  onClick={loginWithGoogle}
+                >
+                  Login
+                </Button>
+              )}
               <div className="flex justify-around">
                 <Button
                   variant="ghost"
