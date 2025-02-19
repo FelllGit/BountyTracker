@@ -166,13 +166,16 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
     accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0), // Використовуємо рейтинг
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Rating
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex justify-center w-full">
+          <Button
+            variant="ghost"
+            className="pl-8" // Аналог padding-left: 2rem;
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Rating
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     sortingFn: "basic",
