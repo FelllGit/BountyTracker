@@ -10,6 +10,7 @@ import { LikeStatus } from "@/interfaces/LikeStatus";
 import ArrowUp from "@/media/svg/ArrowUp.svg";
 import ArrowDown from "@/media/svg/ArrowDown.svg";
 import { useLikeBugBounty } from "@/hooks/likeW3BugBounties";
+import { useToast } from "@/hooks/use-toast";
 
 export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   {
@@ -185,6 +186,28 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
       const decoded = jwt ? (jwtDecode(jwt) as CustomJwtPayload) : null;
 
       const likeContest = useLikeBugBounty();
+      const { toast } = useToast();
+
+      const handleVote = (likeStatus: LikeStatus) => {
+        if (!jwt) {
+          toast({
+            title: "Authorization needed",
+            description: "You need to be logged in to vote.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        likeContest.mutate({
+          id: bugBounty.id,
+          likeStatus,
+        });
+      };
+
+      const userId = decoded?.sub as string;
+      const userLikes = new Set(bugBounty?.likes);
+      const userDislikes = new Set(bugBounty?.dislikes);
+
       const rating =
         (bugBounty?.likes?.length || 0) - (bugBounty?.dislikes?.length || 0);
 
@@ -194,12 +217,9 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
             variant="ghost"
             disabled={!jwt}
             onClick={() => {
-              likeContest.mutate({
-                id: bugBounty.id,
-                likeStatus: bugBounty?.likes?.includes(decoded?.sub as string)
-                  ? LikeStatus.REMOVE
-                  : LikeStatus.LIKE,
-              });
+              handleVote(
+                userLikes.has(userId) ? LikeStatus.REMOVE : LikeStatus.LIKE
+              );
             }}
           >
             <ArrowUp
@@ -215,14 +235,11 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
             variant="ghost"
             disabled={!jwt}
             onClick={() => {
-              likeContest.mutate({
-                id: bugBounty.id,
-                likeStatus: bugBounty?.dislikes?.includes(
-                  decoded?.sub as string
-                )
+              handleVote(
+                userDislikes.has(userId)
                   ? LikeStatus.REMOVE
-                  : LikeStatus.DISLIKE,
-              });
+                  : LikeStatus.DISLIKE
+              );
             }}
           >
             <ArrowDown
