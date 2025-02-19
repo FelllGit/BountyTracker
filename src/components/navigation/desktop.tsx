@@ -31,7 +31,7 @@ const DesktopNavigation = () => {
   }, []);
 
   const loginWithGoogle = () => {
-    window.location.href = "http://localhost:8080/auth/google/login";
+    window.location.href = "https://api.vigilseek.com/auth/google/login";
   };
 
   const logout = () => {
