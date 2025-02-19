@@ -61,18 +61,18 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
     },
     cell: ({ row }) => {
       const languages = row.original.languages;
+      if (!Array.isArray(languages) || languages.length === 0) return null;
+
       return (
         <div className="flex flex-wrap gap-1">
-          {Array.isArray(languages) &&
-            languages.length > 0 &&
-            languages.map((lang, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-secondary rounded-full text-xs"
-              >
-                {lang}
-              </span>
-            ))}
+          {languages.slice(0, 2).map((lang, index) => (
+            <span
+              key={index}
+              className="px-2 py-1 bg-secondary rounded-full text-xs"
+            >
+              {lang}
+            </span>
+          ))}
         </div>
       );
     },

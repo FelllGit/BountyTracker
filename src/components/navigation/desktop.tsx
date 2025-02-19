@@ -23,14 +23,19 @@ const DesktopNavigation = () => {
   const [decoded, setDecoded] = useState<CustomJwtPayload | null>(null);
 
   useEffect(() => {
-    const handleJwtUpdate = () => {
-      const storedJwt = localStorage.getItem("jwt");
+    const storedJwt = localStorage.getItem("jwt");
+    if (storedJwt) {
       setJwt(storedJwt);
-      setDecoded(storedJwt ? (jwtDecode(storedJwt) as CustomJwtPayload) : null);
+      setDecoded(jwtDecode(storedJwt) as CustomJwtPayload);
+    }
+
+    const handleJwtUpdate = () => {
+      const newJwt = localStorage.getItem("jwt");
+      setJwt(newJwt);
+      setDecoded(newJwt ? (jwtDecode(newJwt) as CustomJwtPayload) : null);
     };
 
     window.addEventListener("jwt-updated", handleJwtUpdate);
-
     return () => {
       window.removeEventListener("jwt-updated", handleJwtUpdate);
     };
