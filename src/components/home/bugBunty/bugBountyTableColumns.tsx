@@ -170,7 +170,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
         <div className="flex justify-center w-full">
           <Button
             variant="ghost"
-            className="p-0 lg:pl-4"
+            className="p-0 lg:pr-4"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Rating
