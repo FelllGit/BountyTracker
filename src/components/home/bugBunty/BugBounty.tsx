@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, useRef } from "react";
 import { bugBountyTableColumns } from "@/components/home/bugBunty/bugBountyTableColumns";
 import { useGetW3BugBounties } from "@/hooks/useGetW3BugBounties";

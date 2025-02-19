@@ -4,13 +4,10 @@ import { useEffect, useState } from "react";
 import { FiltersProps } from "@/interfaces/FilterProps";
 
 export const useSavedFilters = (key: string) => {
-  // Використовуємо функцію ініціалізації для useState
   const [filters, setFilters] = useState<FiltersProps>(() => {
-    // Перевіряємо чи ми на клієнті
     if (typeof window !== "undefined") {
       try {
         const storedFilters = localStorage.getItem(key);
-        // Перевіряємо чи є збережені дані
         if (storedFilters) {
           return JSON.parse(storedFilters);
         }
@@ -21,7 +18,6 @@ export const useSavedFilters = (key: string) => {
     return {};
   });
 
-  // Ефект для синхронізації з localStorage
   useEffect(() => {
     try {
       const storedFilters = localStorage.getItem(key);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ImTelegram } from "react-icons/im";
 import { BsTwitterX } from "react-icons/bs";
@@ -16,10 +17,18 @@ const DesktopNavigation = () => {
   const tgUrl = process.env.NEXT_PUBLIC_TG_URL;
   const xUrl = process.env.NEXT_PUBLIC_X_URL;
 
-  const jwt = localStorage.getItem("jwt");
-  const decoded = jwt ? (jwtDecode(jwt) as CustomJwtPayload) : null;
-
   const { theme, toggleTheme } = useTheme();
+
+  const [jwt, setJwt] = useState<string | null>(null);
+  const [decoded, setDecoded] = useState<CustomJwtPayload | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedJwt = localStorage.getItem("jwt");
+      setJwt(storedJwt);
+      setDecoded(storedJwt ? (jwtDecode(storedJwt) as CustomJwtPayload) : null);
+    }
+  }, []);
 
   const loginWithGoogle = () => {
     window.location.href = "http://localhost:8080/auth/google/login";
@@ -27,6 +36,8 @@ const DesktopNavigation = () => {
 
   const logout = () => {
     localStorage.removeItem("jwt");
+    setJwt(null);
+    setDecoded(null);
     router.refresh();
   };
 
@@ -50,9 +61,6 @@ const DesktopNavigation = () => {
       </div>
 
       <div className="flex gap-4">
-        {/*<Button variant="secondary" className="font-bold">*/}
-        {/*  Email Subscription*/}
-        {/*</Button>*/}
         <div className="font-bold text-3xl flex gap-2 items-center">
           <p className="text-sm text-primary">Light</p>
           <Switch
