@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
 import { LikeStatus } from "@/interfaces/LikeStatus";
 
 interface PatchSecurityContestVariables {
@@ -18,13 +16,11 @@ export const useLikeSecurityContest = () => {
   const url = new URL(`${backendUrl}/w3-security-contests`);
 
   const [jwt, setJwt] = useState<string | null>(null);
-  const [decoded, setDecoded] = useState<CustomJwtPayload | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedJwt = localStorage.getItem("jwt");
       setJwt(storedJwt);
-      setDecoded(storedJwt ? (jwtDecode(storedJwt) as CustomJwtPayload) : null);
     }
   }, []);
 
@@ -34,7 +30,7 @@ export const useLikeSecurityContest = () => {
 
       await axios.put(
         `${url}/${id}/likes`,
-        { userID: decoded?.sub, likeStatus },
+        { likeStatus },
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
