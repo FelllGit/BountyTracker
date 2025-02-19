@@ -210,7 +210,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
         <div className="flex justify-center w-full">
           <Button
             variant="ghost"
-            className="pl-8" // Аналог padding-left: 2rem;
+            className="p-0"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Rating
