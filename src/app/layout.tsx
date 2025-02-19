@@ -6,6 +6,7 @@ import Header from "@/app/header";
 // import Footer from "@/app/footer";
 import { Providers } from "@/app/providers";
 import "./app.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -53,6 +54,7 @@ export default function RootLayout({
           <main className="max-w-full flex-grow flex flex-col p-10 px-2 md:px-16 2xl:px-44 mt-16">
             {children}
           </main>
+          <Toaster />
           {/*<Footer />*/}
         </Providers>
       </body>

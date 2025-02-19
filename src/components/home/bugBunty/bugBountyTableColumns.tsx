@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import { BugBounty } from "@/interfaces/BugBounty";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
+import { LikeStatus } from "@/interfaces/LikeStatus";
+import ArrowUp from "@/media/svg/ArrowUp.svg";
+import ArrowDown from "@/media/svg/ArrowDown.svg";
+import { useLikeBugBounty } from "@/hooks/likeW3BugBounties";
 
 export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   {
@@ -150,6 +156,79 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
         >
           View Program
         </Button>
+      );
+    },
+  },
+  {
+    id: "rating",
+    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0), // Використовуємо рейтинг
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Rating
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    sortingFn: "basic",
+    cell: ({ row }) => {
+      const bugBounty = row.original;
+      const jwt = localStorage.getItem("jwt");
+      const decoded = jwt ? (jwtDecode(jwt) as CustomJwtPayload) : null;
+
+      const likeContest = useLikeBugBounty();
+      const rating =
+        (bugBounty?.likes?.length || 0) - (bugBounty?.dislikes?.length || 0);
+
+      return (
+        <div className="flex gap-2 items-center pr-4">
+          <Button
+            variant="ghost"
+            disabled={!jwt}
+            onClick={() => {
+              likeContest.mutate({
+                id: bugBounty.id,
+                likeStatus: bugBounty?.likes?.includes(decoded?.sub as string)
+                  ? LikeStatus.REMOVE
+                  : LikeStatus.LIKE,
+              });
+            }}
+          >
+            <ArrowUp
+              className={
+                bugBounty?.likes?.includes(decoded?.sub as string)
+                  ? "dark:fill-yellow-600 !fill-yellow-400"
+                  : ""
+              }
+            />
+          </Button>
+          <p>{rating}</p>
+          <Button
+            variant="ghost"
+            disabled={!jwt}
+            onClick={() => {
+              likeContest.mutate({
+                id: bugBounty.id,
+                likeStatus: bugBounty?.dislikes?.includes(
+                  decoded?.sub as string
+                )
+                  ? LikeStatus.REMOVE
+                  : LikeStatus.DISLIKE,
+              });
+            }}
+          >
+            <ArrowDown
+              className={
+                bugBounty?.dislikes?.includes(decoded?.sub as string)
+                  ? "dark:fill-yellow-600 !fill-yellow-400"
+                  : ""
+              }
+            />
+          </Button>
+        </div>
       );
     },
   },

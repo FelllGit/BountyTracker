@@ -13,6 +13,8 @@ export interface CrowdsourcedAudit {
   endDate: string;
   evaluationEndDate: string;
   status: string;
+  likes: string[];
+  dislikes: string[];
 }
 
 export enum AuditStatus {

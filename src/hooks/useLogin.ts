@@ -1,3 +1,5 @@
+"use client";
+
 import axios, { AxiosError } from "axios";
 
 export const useLogin = async (password: string) => {
