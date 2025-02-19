@@ -215,7 +215,6 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
         <div className="flex gap-2 items-center pr-4">
           <Button
             variant="ghost"
-            disabled={!jwt}
             onClick={() => {
               handleVote(
                 userLikes.has(userId) ? LikeStatus.REMOVE : LikeStatus.LIKE
@@ -233,7 +232,6 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
           <p>{rating}</p>
           <Button
             variant="ghost"
-            disabled={!jwt}
             onClick={() => {
               handleVote(
                 userDislikes.has(userId)
