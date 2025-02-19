@@ -114,7 +114,7 @@ const MobileNavigation = () => {
               {jwt ? (
                 <Button
                   variant="secondary"
-                  className="font-bold uppercase rounded-xl flex gap-2 px-2"
+                  className="font-bold uppercase rounded-xl flex justify-between gap-2 px-2"
                   onClick={logout}
                 >
                   <Image
