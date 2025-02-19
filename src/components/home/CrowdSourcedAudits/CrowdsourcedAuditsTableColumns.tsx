@@ -5,6 +5,13 @@ import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import { BugBounty } from "@/interfaces/BugBounty";
 import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
+import ArrowUp from "@/media/svg/ArrowUp.svg";
+import ArrowDown from "@/media/svg/ArrowDown.svg";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
+import { useLikeSecurityContest } from "@/hooks/likeW3SecurityContests";
+import { LikeStatus } from "@/interfaces/LikeStatus";
+import { useToast } from "@/hooks/use-toast";
 
 export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
   {
@@ -192,6 +199,92 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
         >
           View Program
         </Button>
+      );
+    },
+  },
+  {
+    id: "rating",
+    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0), // Використовуємо правильне значення
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Rating
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    sortingFn: "basic",
+    cell: ({ row }) => {
+      const bugBounty = row.original;
+      const jwt = localStorage.getItem("jwt");
+      const decoded = jwt ? (jwtDecode(jwt) as CustomJwtPayload) : null;
+
+      const likeContest = useLikeSecurityContest();
+      const { toast } = useToast();
+
+      const handleVote = (likeStatus: LikeStatus) => {
+        if (!jwt) {
+          toast({
+            title: "Authorization needed",
+            description: "You need to be logged in to vote.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        likeContest.mutate({
+          id: bugBounty.id,
+          likeStatus,
+        });
+      };
+
+      const userId = decoded?.sub as string;
+      const userLikes = new Set(bugBounty?.likes);
+      const userDislikes = new Set(bugBounty?.dislikes);
+      const rating =
+        (bugBounty?.likes?.length || 0) - (bugBounty?.dislikes?.length || 0);
+
+      return (
+        <div className="flex gap-2 items-center pr-4">
+          <Button
+            variant="ghost"
+            onClick={() =>
+              handleVote(
+                userLikes.has(userId) ? LikeStatus.REMOVE : LikeStatus.LIKE
+              )
+            }
+          >
+            <ArrowUp
+              className={
+                userLikes.has(userId)
+                  ? "dark:fill-yellow-600 !fill-yellow-400"
+                  : ""
+              }
+            />
+          </Button>
+          <p>{rating}</p>
+          <Button
+            variant="ghost"
+            onClick={() =>
+              handleVote(
+                userDislikes.has(userId)
+                  ? LikeStatus.REMOVE
+                  : LikeStatus.DISLIKE
+              )
+            }
+          >
+            <ArrowDown
+              className={
+                userDislikes.has(userId)
+                  ? "dark:fill-yellow-600 !fill-yellow-400"
+                  : ""
+              }
+            />
+          </Button>
+        </div>
       );
     },
   },

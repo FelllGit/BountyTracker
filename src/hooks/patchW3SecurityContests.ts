@@ -15,7 +15,7 @@ export const usePatchSecurityContestLanguages = () => {
     mutationFn: async ({ id, languages }: PatchSecurityContestVariables) => {
       const authPassword = sessionStorage.getItem("admin-password");
 
-      await axios.patch(
+      await axios.put(
         `${url}/${id}/languages`,
         { languages },
         {

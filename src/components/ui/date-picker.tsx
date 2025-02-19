@@ -58,7 +58,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             className
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4 scale-125" color="grey" />
+          <CalendarIcon className="mr-2 h-4 w-4 scale-125 text-card-foreground" />
           {startDate ? (
             <span>
               {format(startDate, "yyyy-MM-dd")}

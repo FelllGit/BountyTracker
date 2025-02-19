@@ -10,4 +10,6 @@ export interface BugBounty {
   rewardsPool: number;
   rewardsToken: string;
   startDate: string;
+  likes: string[];
+  dislikes: string[];
 }
