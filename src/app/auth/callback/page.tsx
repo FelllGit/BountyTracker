@@ -12,6 +12,7 @@ function AuthCallbackContent() {
   useEffect(() => {
     if (jwt) {
       localStorage.setItem("jwt", jwt);
+      window.dispatchEvent(new Event("jwt-updated"));
       router.push("/");
     } else {
       console.error("JWT is missing");
