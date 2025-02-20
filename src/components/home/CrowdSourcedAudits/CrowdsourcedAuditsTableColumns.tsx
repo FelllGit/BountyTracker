@@ -3,8 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
-import { BugBounty } from "@/interfaces/BugBounty";
-import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
+import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import ArrowUp from "@/media/svg/ArrowUp.svg";
 import ArrowDown from "@/media/svg/ArrowDown.svg";
 import { jwtDecode } from "jwt-decode";
@@ -12,8 +11,14 @@ import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
 import { useLikeSecurityContest } from "@/hooks/likeW3SecurityContests";
 import { LikeStatus } from "@/interfaces/LikeStatus";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
+export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   {
     accessorKey: "project",
     header: ({ column }) => {
@@ -191,10 +196,10 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const bugBounty = row.original;
+      const crowdsourcedAudit = row.original;
       return (
         <Button
-          onClick={() => window.open(bugBounty.originalUrl, "_blank")}
+          onClick={() => window.open(crowdsourcedAudit.originalUrl, "_blank")}
           variant="outline"
         >
           View Program
@@ -219,9 +224,8 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
         </div>
       );
     },
-    sortingFn: "basic",
     cell: ({ row }) => {
-      const bugBounty = row.original;
+      const crowdsourcedAudit = row.original;
       const jwt = localStorage.getItem("jwt");
       const decoded = jwt ? (jwtDecode(jwt) as CustomJwtPayload) : null;
 
@@ -239,55 +243,70 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
         }
 
         likeContest.mutate({
-          id: bugBounty.id,
+          id: crowdsourcedAudit.id,
           likeStatus,
         });
       };
 
       const userId = decoded?.sub as string;
-      const userLikes = new Set(bugBounty?.likes);
-      const userDislikes = new Set(bugBounty?.dislikes);
+      const userLikes = new Set(crowdsourcedAudit?.likes);
+      const userDislikes = new Set(crowdsourcedAudit?.dislikes);
       const rating =
-        (bugBounty?.likes?.length || 0) - (bugBounty?.dislikes?.length || 0);
+        (crowdsourcedAudit?.likes?.length || 0) -
+        (crowdsourcedAudit?.dislikes?.length || 0);
 
       return (
-        <div className="flex gap-2 items-center pr-4">
-          <Button
-            variant="ghost"
-            onClick={() =>
-              handleVote(
-                userLikes.has(userId) ? LikeStatus.REMOVE : LikeStatus.LIKE
-              )
-            }
-          >
-            <ArrowUp
-              className={
-                userLikes.has(userId)
-                  ? "dark:fill-yellow-600 !fill-yellow-400"
-                  : ""
-              }
-            />
-          </Button>
-          <p>{rating}</p>
-          <Button
-            variant="ghost"
-            onClick={() =>
-              handleVote(
-                userDislikes.has(userId)
-                  ? LikeStatus.REMOVE
-                  : LikeStatus.DISLIKE
-              )
-            }
-          >
-            <ArrowDown
-              className={
-                userDislikes.has(userId)
-                  ? "dark:fill-yellow-600 !fill-yellow-400"
-                  : ""
-              }
-            />
-          </Button>
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="flex gap-2 items-center pr-4">
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    handleVote(
+                      userLikes.has(userId)
+                        ? LikeStatus.REMOVE
+                        : LikeStatus.LIKE
+                    )
+                  }
+                >
+                  <ArrowUp
+                    className={
+                      userLikes.has(userId)
+                        ? "dark:fill-yellow-600 !fill-yellow-400"
+                        : ""
+                    }
+                  />
+                </Button>
+                <p>{rating}</p>
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    handleVote(
+                      userDislikes.has(userId)
+                        ? LikeStatus.REMOVE
+                        : LikeStatus.DISLIKE
+                    )
+                  }
+                >
+                  <ArrowDown
+                    className={
+                      userDislikes.has(userId)
+                        ? "dark:fill-yellow-600 !fill-yellow-400"
+                        : ""
+                    }
+                  />
+                </Button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-secondary-foreground">
+                {crowdsourcedAudit.likes.length} likes |{" "}
+                {crowdsourcedAudit.dislikes.length} dislikes
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       );
     },
   },

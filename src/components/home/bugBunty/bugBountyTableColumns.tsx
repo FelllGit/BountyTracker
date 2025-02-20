@@ -11,6 +11,12 @@ import ArrowUp from "@/media/svg/ArrowUp.svg";
 import ArrowDown from "@/media/svg/ArrowDown.svg";
 import { useLikeBugBounty } from "@/hooks/likeW3BugBounties";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   {
@@ -164,7 +170,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   },
   {
     id: "rating",
-    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0), // Використовуємо рейтинг
+    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0),
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full">
@@ -179,7 +185,6 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
         </div>
       );
     },
-    sortingFn: "basic",
     cell: ({ row }) => {
       const bugBounty = row.original;
       const jwt = localStorage.getItem("jwt");
@@ -212,43 +217,57 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
         (bugBounty?.likes?.length || 0) - (bugBounty?.dislikes?.length || 0);
 
       return (
-        <div className="flex gap-2 items-center pr-4">
-          <Button
-            variant="ghost"
-            onClick={() => {
-              handleVote(
-                userLikes.has(userId) ? LikeStatus.REMOVE : LikeStatus.LIKE
-              );
-            }}
-          >
-            <ArrowUp
-              className={
-                bugBounty?.likes?.includes(decoded?.sub as string)
-                  ? "dark:fill-yellow-600 !fill-yellow-400"
-                  : ""
-              }
-            />
-          </Button>
-          <p>{rating}</p>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              handleVote(
-                userDislikes.has(userId)
-                  ? LikeStatus.REMOVE
-                  : LikeStatus.DISLIKE
-              );
-            }}
-          >
-            <ArrowDown
-              className={
-                bugBounty?.dislikes?.includes(decoded?.sub as string)
-                  ? "dark:fill-yellow-600 !fill-yellow-400"
-                  : ""
-              }
-            />
-          </Button>
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="flex gap-2 items-center pr-4">
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    handleVote(
+                      userLikes.has(userId)
+                        ? LikeStatus.REMOVE
+                        : LikeStatus.LIKE
+                    )
+                  }
+                >
+                  <ArrowUp
+                    className={
+                      userLikes.has(userId)
+                        ? "dark:fill-yellow-600 !fill-yellow-400"
+                        : ""
+                    }
+                  />
+                </Button>
+                <p>{rating}</p>
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    handleVote(
+                      userDislikes.has(userId)
+                        ? LikeStatus.REMOVE
+                        : LikeStatus.DISLIKE
+                    )
+                  }
+                >
+                  <ArrowDown
+                    className={
+                      userDislikes.has(userId)
+                        ? "dark:fill-yellow-600 !fill-yellow-400"
+                        : ""
+                    }
+                  />
+                </Button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-secondary-foreground">
+                {bugBounty.likes.length} likes | {bugBounty.dislikes.length}{" "}
+                dislikes
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       );
     },
   },
