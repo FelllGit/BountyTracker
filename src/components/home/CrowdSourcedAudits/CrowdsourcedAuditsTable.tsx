@@ -77,17 +77,26 @@ const CrowdsourcedAuditsTable = () => {
     setFilters,
   ]);
 
-  function sortData(data: CrowdsourcedAudit[], sorting: SortingState) {
+  function sortData(
+    data: CrowdsourcedAudit[],
+    sorting: SortingState
+  ): CrowdsourcedAudit[] {
     if (sorting.length === 0) return data;
-
     return [...data].sort((a, b) => {
       for (const sort of sorting) {
         const { id, desc } = sort;
-        const key = id as keyof CrowdsourcedAudit; // Cast 'id' to keyof CrowdsourcedAudit
+        if (id === "rating") {
+          const aRating: number =
+            (a.likes?.length ?? 0) - (a.dislikes?.length ?? 0);
+          const bRating: number =
+            (b.likes?.length ?? 0) - (b.dislikes?.length ?? 0);
+          if (aRating > bRating) return desc ? -1 : 1;
+          if (aRating < bRating) return desc ? 1 : -1;
+          continue;
+        }
+        const key = id as keyof CrowdsourcedAudit;
         let aValue = a[key];
         let bValue = b[key];
-
-        // Handle specific data types
         if (key === "startDate" || key === "endDate") {
           const aValueDate = new Date(aValue as string);
           const bValueDate = new Date(bValue as string);
@@ -103,7 +112,6 @@ const CrowdsourcedAuditsTable = () => {
           aValue = aValue.toLowerCase();
           bValue = bValue.toLowerCase();
         }
-
         if (aValue > bValue) return desc ? -1 : 1;
         if (aValue < bValue) return desc ? 1 : -1;
       }
@@ -141,7 +149,6 @@ const CrowdsourcedAuditsTable = () => {
     sorting,
   ]);
 
-  // IntersectionObserver для підвантаження наступних сторінок
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {

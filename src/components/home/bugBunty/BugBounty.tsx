@@ -59,34 +59,38 @@ const BugBountyTable = () => {
     });
   }, [languages, startDate, search, platforms, maxReward, setFilters]);
 
-  function sortData(data: BugBounty[], sorting: SortingState) {
+  function sortData(data: BugBounty[], sorting: SortingState): BugBounty[] {
     if (sorting.length === 0) return data;
-
     return [...data].sort((a, b) => {
       for (const sort of sorting) {
         const { id, desc } = sort;
-        const key = id as keyof BugBounty; // Cast 'id' to keyof BugBounty
-        let aValue = a[key];
-        let bValue = b[key];
-
-        // Handle specific data types
-        if (key === "startDate") {
-          const aValueDate = new Date(aValue as string);
-          const bValueDate = new Date(bValue as string);
-          if (aValueDate > bValueDate) return desc ? -1 : 1;
-          if (aValueDate < bValueDate) return desc ? 1 : -1;
+        if (id === "rating") {
+          const aRating: number =
+            (a.likes?.length ?? 0) - (a.dislikes?.length ?? 0);
+          const bRating: number =
+            (b.likes?.length ?? 0) - (b.dislikes?.length ?? 0);
+          if (aRating > bRating) return desc ? -1 : 1;
+          if (aRating < bRating) return desc ? 1 : -1;
           continue;
+        }
+        const key = id as keyof BugBounty;
+        let aValue: string | number = a[key] as string | number;
+        let bValue: string | number = b[key] as string | number;
+        if (key === "startDate") {
+          const aDate = new Date(aValue as string);
+          const bDate = new Date(bValue as string);
+          if (aDate > bDate) return desc ? -1 : 1;
+          if (aDate < bDate) return desc ? 1 : -1;
         } else if (key === "languages") {
           aValue = Array.isArray(aValue) ? (aValue as string[]).join(", ") : "";
           bValue = Array.isArray(bValue) ? (bValue as string[]).join(", ") : "";
         } else if (key === "maxReward") {
-          aValue = aValue || 0;
-          bValue = bValue || 0;
+          aValue = (aValue as number) || 0;
+          bValue = (bValue as number) || 0;
         } else if (typeof aValue === "string" && typeof bValue === "string") {
           aValue = aValue.toLowerCase();
           bValue = bValue.toLowerCase();
         }
-
         if (aValue > bValue) return desc ? -1 : 1;
         if (aValue < bValue) return desc ? 1 : -1;
       }

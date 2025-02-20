@@ -1,10 +1,9 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
-import { BugBounty } from "@/interfaces/BugBounty";
-import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
+import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import ArrowUp from "@/media/svg/ArrowUp.svg";
 import ArrowDown from "@/media/svg/ArrowDown.svg";
 import { jwtDecode } from "jwt-decode";
@@ -13,7 +12,7 @@ import { useLikeSecurityContest } from "@/hooks/likeW3SecurityContests";
 import { LikeStatus } from "@/interfaces/LikeStatus";
 import { useToast } from "@/hooks/use-toast";
 
-export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
+export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   {
     accessorKey: "project",
     header: ({ column }) => {
@@ -219,7 +218,6 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
         </div>
       );
     },
-    sortingFn: "basic",
     cell: ({ row }) => {
       const bugBounty = row.original;
       const jwt = localStorage.getItem("jwt");

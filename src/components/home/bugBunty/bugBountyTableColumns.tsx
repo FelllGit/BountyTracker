@@ -1,5 +1,5 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
@@ -164,7 +164,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   },
   {
     id: "rating",
-    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0), // Використовуємо рейтинг
+    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0),
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full">
@@ -179,7 +179,6 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
         </div>
       );
     },
-    sortingFn: "basic",
     cell: ({ row }) => {
       const bugBounty = row.original;
       const jwt = localStorage.getItem("jwt");
