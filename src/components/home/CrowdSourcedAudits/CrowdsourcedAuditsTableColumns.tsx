@@ -17,6 +17,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   {
@@ -278,7 +283,17 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
                     }
                   />
                 </Button>
-                <p>{rating}</p>
+                <Popover>
+                  <PopoverTrigger>
+                    <p>{rating}</p>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <p className="text-secondary-foreground">
+                      {crowdsourcedAudit.likes.length} likes |{" "}
+                      {crowdsourcedAudit.dislikes.length} dislikes
+                    </p>
+                  </PopoverContent>
+                </Popover>
                 <Button
                   variant="ghost"
                   onClick={() =>
