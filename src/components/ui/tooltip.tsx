@@ -27,24 +27,26 @@ const Tooltip = ({
 };
 
 interface TooltipTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger> {
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>,
+    "onClick" | "onToggle" | "align"
+  > {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
+const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
   ({ onClick, ...props }, ref) => {
     const [isClicked, setIsClicked] = useState<boolean>(false);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-      event.preventDefault();
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
       setIsClicked(!isClicked);
-      if (onClick) {
-        onClick(event);
-      }
+      onClick?.(event);
     };
 
     return (
-      <TooltipPrimitive.Trigger ref={ref} onClick={handleClick} {...props} />
+      <TooltipPrimitive.Trigger asChild {...props}>
+        <div ref={ref} onClick={handleClick} />
+      </TooltipPrimitive.Trigger>
     );
   }
 );
