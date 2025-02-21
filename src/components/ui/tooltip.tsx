@@ -31,12 +31,11 @@ interface TooltipTriggerProps
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
+const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
   ({ onClick, ...props }, ref) => {
     const [isClicked, setIsClicked] = useState<boolean>(false);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-      event.preventDefault();
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
       setIsClicked(!isClicked);
       if (onClick) {
         onClick(event);
@@ -44,17 +43,13 @@ const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
     };
 
     return (
-      <TooltipPrimitive.Trigger ref={ref} onClick={handleClick} {...props} />
+      <TooltipPrimitive.Trigger asChild>
+        <div ref={ref} onClick={handleClick} {...props} />
+      </TooltipPrimitive.Trigger>
     );
   }
 );
 TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName;
-
-interface TooltipContentProps
-  extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> {
-  className?: string;
-  sideOffset?: number;
-}
 
 const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
   ({ className, sideOffset = 4, ...props }, ref) => (
