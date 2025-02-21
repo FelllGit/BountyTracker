@@ -27,8 +27,11 @@ const Tooltip = ({
 };
 
 interface TooltipTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger> {
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  extends Omit<
+    React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>,
+    "onClick" | "onToggle" | "align"
+  > {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
@@ -37,19 +40,23 @@ const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
       setIsClicked(!isClicked);
-      if (onClick) {
-        onClick(event);
-      }
+      onClick?.(event);
     };
 
     return (
-      <TooltipPrimitive.Trigger asChild>
-        <div ref={ref} onClick={handleClick} {...props} />
+      <TooltipPrimitive.Trigger asChild {...props}>
+        <div ref={ref} onClick={handleClick} />
       </TooltipPrimitive.Trigger>
     );
   }
 );
 TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName;
+
+interface TooltipContentProps
+  extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> {
+  className?: string;
+  sideOffset?: number;
+}
 
 const TooltipContent = forwardRef<HTMLDivElement, TooltipContentProps>(
   ({ className, sideOffset = 4, ...props }, ref) => (
