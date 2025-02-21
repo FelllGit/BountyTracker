@@ -17,11 +17,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
   {
@@ -244,17 +239,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
                     }
                   />
                 </Button>
-                <Popover>
-                  <PopoverTrigger>
-                    <p>{rating}</p>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <p className="text-secondary-foreground">
-                      {bugBounty.likes.length} likes |{" "}
-                      {bugBounty.dislikes.length} dislikes
-                    </p>
-                  </PopoverContent>
-                </Popover>
+                <p>{rating}</p>
                 <Button
                   variant="ghost"
                   onClick={() =>
