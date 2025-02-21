@@ -219,51 +219,49 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
       return (
         <TooltipProvider>
           <Tooltip>
-            <div className="relative">
-              {/* Invisible touch area that spans the entire component */}
-              <TooltipTrigger className="absolute inset-0 w-full h-full" />
-
-              {/* Your actual content */}
-              <div className="flex gap-2 items-center pr-4">
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    handleVote(
-                      userLikes.has(userId)
-                        ? LikeStatus.REMOVE
-                        : LikeStatus.LIKE
-                    )
-                  }
-                >
-                  <ArrowUp
-                    className={
-                      userLikes.has(userId)
-                        ? "dark:fill-yellow-600 !fill-yellow-400"
-                        : ""
+            <TooltipTrigger>
+              <div className="relative">
+                <div className="flex gap-2 items-center pr-4">
+                  <Button
+                    variant="ghost"
+                    onClick={() =>
+                      handleVote(
+                        userLikes.has(userId)
+                          ? LikeStatus.REMOVE
+                          : LikeStatus.LIKE
+                      )
                     }
-                  />
-                </Button>
-                <p>{rating}</p>
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    handleVote(
-                      userDislikes.has(userId)
-                        ? LikeStatus.REMOVE
-                        : LikeStatus.DISLIKE
-                    )
-                  }
-                >
-                  <ArrowDown
-                    className={
-                      userDislikes.has(userId)
-                        ? "dark:fill-yellow-600 !fill-yellow-400"
-                        : ""
+                  >
+                    <ArrowUp
+                      className={
+                        userLikes.has(userId)
+                          ? "dark:fill-yellow-600 !fill-yellow-400"
+                          : ""
+                      }
+                    />
+                  </Button>
+                  <p>{rating}</p>
+                  <Button
+                    variant="ghost"
+                    onClick={() =>
+                      handleVote(
+                        userDislikes.has(userId)
+                          ? LikeStatus.REMOVE
+                          : LikeStatus.DISLIKE
+                      )
                     }
-                  />
-                </Button>
+                  >
+                    <ArrowDown
+                      className={
+                        userDislikes.has(userId)
+                          ? "dark:fill-yellow-600 !fill-yellow-400"
+                          : ""
+                      }
+                    />
+                  </Button>
+                </div>
               </div>
-            </div>
+            </TooltipTrigger>
             <TooltipContent>
               <p className="text-secondary-foreground">
                 {bugBounty.likes.length} likes | {bugBounty.dislikes.length}{" "}

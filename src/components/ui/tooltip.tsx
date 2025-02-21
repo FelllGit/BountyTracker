@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, useCallback, type ReactNode } from "react";
+import { forwardRef, useState, type ReactNode } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 import { cn } from "@/lib/utils";
@@ -10,28 +10,17 @@ const TooltipProvider = TooltipPrimitive.Provider;
 interface TooltipProps {
   children: ReactNode;
   defaultOpen?: boolean;
-  delayDuration?: number;
 }
 
 const Tooltip = ({
   children,
   defaultOpen = false,
-  delayDuration = 0, // Remove delay for mobile
   ...props
 }: TooltipProps & TooltipPrimitive.TooltipProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const handleOpenChange = useCallback((open: boolean) => {
-    setIsOpen(open);
-  }, []);
-
   return (
-    <TooltipPrimitive.Root
-      open={isOpen}
-      onOpenChange={handleOpenChange}
-      delayDuration={delayDuration}
-      {...props}
-    >
+    <TooltipPrimitive.Root open={isOpen} onOpenChange={setIsOpen} {...props}>
       {children}
     </TooltipPrimitive.Root>
   );
@@ -40,18 +29,22 @@ const Tooltip = ({
 interface TooltipTriggerProps
   extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  asChild?: boolean;
 }
 
 const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
-  ({ asChild = true, className, ...props }, ref) => {
+  ({ onClick, ...props }, ref) => {
+    const [isClicked, setIsClicked] = useState<boolean>(false);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+      event.preventDefault();
+      setIsClicked(!isClicked);
+      if (onClick) {
+        onClick(event);
+      }
+    };
+
     return (
-      <TooltipPrimitive.Trigger
-        ref={ref}
-        asChild={asChild}
-        className={cn("cursor-default", className)}
-        {...props}
-      />
+      <TooltipPrimitive.Trigger ref={ref} onClick={handleClick} {...props} />
     );
   }
 );
