@@ -258,11 +258,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
       return (
         <TooltipProvider>
           <Tooltip>
-            <div className="relative">
-              {/* Invisible touch area that spans the entire component */}
-              <TooltipTrigger className="absolute inset-0 w-full h-full" />
-
-              {/* Your actual content */}
+            <TooltipTrigger>
               <div className="flex gap-2 items-center pr-4">
                 <Button
                   variant="ghost"
@@ -302,7 +298,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
                   />
                 </Button>
               </div>
-            </div>
+            </TooltipTrigger>
             <TooltipContent>
               <p className="text-secondary-foreground">
                 {crowdsourcedAudit.likes.length} likes |{" "}
