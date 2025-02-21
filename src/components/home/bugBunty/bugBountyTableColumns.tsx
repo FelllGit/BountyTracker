@@ -219,7 +219,11 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
       return (
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <div className="relative">
+              {/* Invisible touch area that spans the entire component */}
+              <TooltipTrigger className="absolute inset-0 w-full h-full" />
+
+              {/* Your actual content */}
               <div className="flex gap-2 items-center pr-4">
                 <Button
                   variant="ghost"
@@ -259,7 +263,7 @@ export const bugBountyTableColumns: ColumnDef<BugBounty>[] = [
                   />
                 </Button>
               </div>
-            </TooltipTrigger>
+            </div>
             <TooltipContent>
               <p className="text-secondary-foreground">
                 {bugBounty.likes.length} likes | {bugBounty.dislikes.length}{" "}

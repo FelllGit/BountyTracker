@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, type ReactNode } from "react";
+import { forwardRef, useState, useCallback, type ReactNode } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 import { cn } from "@/lib/utils";
@@ -10,17 +10,28 @@ const TooltipProvider = TooltipPrimitive.Provider;
 interface TooltipProps {
   children: ReactNode;
   defaultOpen?: boolean;
+  delayDuration?: number;
 }
 
 const Tooltip = ({
   children,
   defaultOpen = false,
+  delayDuration = 0, // Remove delay for mobile
   ...props
 }: TooltipProps & TooltipPrimitive.TooltipProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsOpen(open);
+  }, []);
+
   return (
-    <TooltipPrimitive.Root open={isOpen} onOpenChange={setIsOpen} {...props}>
+    <TooltipPrimitive.Root
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      delayDuration={delayDuration}
+      {...props}
+    >
       {children}
     </TooltipPrimitive.Root>
   );
@@ -29,30 +40,16 @@ const Tooltip = ({
 interface TooltipTriggerProps
   extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger> {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  asChild?: boolean;
 }
 
 const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
-  ({ onClick, ...props }, ref) => {
-    const [isClicked, setIsClicked] = useState(false);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      setIsClicked(!isClicked);
-
-      if (onClick) {
-        onClick(event);
-      }
-    };
-
-    const handleTouchStart = (event: React.TouchEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-    };
-
+  ({ asChild = true, className, ...props }, ref) => {
     return (
       <TooltipPrimitive.Trigger
         ref={ref}
-        onClick={handleClick}
-        onTouchStart={handleTouchStart}
+        asChild={asChild}
+        className={cn("cursor-default", className)}
         {...props}
       />
     );
