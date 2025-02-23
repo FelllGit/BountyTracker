@@ -4,19 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
-import ArrowUp from "@/media/svg/ArrowUp.svg";
-import ArrowDown from "@/media/svg/ArrowDown.svg";
-import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
-import { useLikeSecurityContest } from "@/hooks/likeW3SecurityContests";
-import { LikeStatus } from "@/interfaces/LikeStatus";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   {
@@ -204,109 +191,6 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
         >
           View Program
         </Button>
-      );
-    },
-  },
-  {
-    id: "rating",
-    accessorFn: (row) => (row.likes?.length || 0) - (row.dislikes?.length || 0),
-    header: ({ column }) => {
-      return (
-        <div className="flex justify-center w-full">
-          <Button
-            variant="ghost"
-            className="p-0"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Rating
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const crowdsourcedAudit = row.original;
-      const jwt = localStorage.getItem("jwt");
-      const decoded = jwt ? (jwtDecode(jwt) as CustomJwtPayload) : null;
-
-      const likeContest = useLikeSecurityContest();
-      const { toast } = useToast();
-
-      const handleVote = (likeStatus: LikeStatus) => {
-        if (!jwt) {
-          toast({
-            title: "Authorization needed",
-            description: "You need to be logged in to vote.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        likeContest.mutate({
-          id: crowdsourcedAudit.id,
-          likeStatus,
-        });
-      };
-
-      const userId = decoded?.sub as string;
-      const userLikes = new Set(crowdsourcedAudit?.likes);
-      const userDislikes = new Set(crowdsourcedAudit?.dislikes);
-      const rating =
-        (crowdsourcedAudit?.likes?.length || 0) -
-        (crowdsourcedAudit?.dislikes?.length || 0);
-
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <div className="flex gap-2 items-center pr-4">
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    handleVote(
-                      userLikes.has(userId)
-                        ? LikeStatus.REMOVE
-                        : LikeStatus.LIKE
-                    )
-                  }
-                >
-                  <ArrowUp
-                    className={
-                      userLikes.has(userId)
-                        ? "dark:fill-yellow-600 !fill-yellow-400"
-                        : ""
-                    }
-                  />
-                </Button>
-                <p>{rating}</p>
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    handleVote(
-                      userDislikes.has(userId)
-                        ? LikeStatus.REMOVE
-                        : LikeStatus.DISLIKE
-                    )
-                  }
-                >
-                  <ArrowDown
-                    className={
-                      userDislikes.has(userId)
-                        ? "dark:fill-yellow-600 !fill-yellow-400"
-                        : ""
-                    }
-                  />
-                </Button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-secondary-foreground">
-                {crowdsourcedAudit.likes.length} likes |{" "}
-                {crowdsourcedAudit.dislikes.length} dislikes
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       );
     },
   },
