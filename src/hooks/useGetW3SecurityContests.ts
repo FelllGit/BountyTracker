@@ -136,6 +136,7 @@ export const useGetW3SecurityContests = (
   excludeLanguages?: boolean
 ) => {
   return useQuery({
+    // eslint-disable-next-line no-restricted-syntax
     queryKey: [
       "w3-security-contests",
       search,
