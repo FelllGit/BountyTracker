@@ -7,6 +7,7 @@ import Header from "@/app/header";
 import { Providers } from "@/app/providers";
 import "./app.css";
 import { Toaster } from "@/components/ui/toaster";
+import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -49,6 +50,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen !min-w-full`}
       >
+        <Script
+          id="clarity-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "qdy38m6ssg");`,
+          }}
+        />
         <Providers>
           <Header />
           <main className="max-w-full flex-grow flex flex-col p-10 px-2 md:px-16 2xl:px-44 mt-16">
