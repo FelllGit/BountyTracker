@@ -136,14 +136,14 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   },
   {
     accessorKey: "duration",
-    size: 200,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="w-32"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Duration
+          <p className="-ml-4">Duration</p>
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
