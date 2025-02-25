@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import { AuditStatus, CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
+import moment from "moment/moment";
 
 export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   {
@@ -134,6 +135,34 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
     },
   },
   {
+    accessorKey: "duration",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Duration
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const startDate = moment(row.original.startDate);
+      const endDate = moment(row.original.endDate);
+      const now = moment();
+
+      const totalDays = endDate.diff(startDate, "days");
+      const daysLeft = Math.max(0, endDate.diff(now, "days"));
+
+      return (
+        <p>
+          {totalDays} Days (Left: {daysLeft})
+        </p>
+      );
+    },
+  },
+  {
     accessorKey: "status",
     header: ({ column }) => {
       return (
@@ -175,7 +204,6 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
                 maximumFractionDigits: 0,
               })
             : "N/A"}{" "}
-          {/* Відображаємо "N/A", якщо значення відсутнє */}
         </div>
       );
     },
