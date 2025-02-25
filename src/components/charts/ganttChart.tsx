@@ -122,6 +122,9 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
             onTouchStart: () => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
             },
+            onClick: () => {
+              window.open(project.originalUrl, "_blank", "noopener,noreferrer");
+            },
           },
         };
       })
