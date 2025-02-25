@@ -109,7 +109,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
           itemProps: {
             style: {
               backgroundColor: groupColors[validatedGroupId],
-              selectedBgColor: groupColors[validatedGroupId],
               fontSize: isMobile ? "12px" : "14px",
               color: "white",
               borderRadius: "4px",
@@ -117,14 +116,12 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
               minHeight: "18px",
               WebkitTapHighlightColor: "transparent",
               outline: "none",
-            },
-            onMouseDown: () => {
-              window.open(project.originalUrl, "_blank", "noopener,noreferrer");
-            },
-            onTouchStart: () => {
-              window.open(project.originalUrl, "_blank", "noopener,noreferrer");
+              touchAction: "manipulation",
             },
             onClick: () => {
+              window.open(project.originalUrl, "_blank", "noopener,noreferrer");
+            },
+            onTouchEnd: () => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
             },
           },
