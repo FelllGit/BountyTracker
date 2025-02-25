@@ -112,9 +112,12 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
               borderRadius: "4px",
               cursor: "pointer",
               minHeight: "18px",
-              // overflow: "hidden",
+              overflow: "hidden",
             },
             onMouseDown: () => {
+              window.open(project.originalUrl, "_blank", "noopener,noreferrer");
+            },
+            onTouchStart: () => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
             },
           },
