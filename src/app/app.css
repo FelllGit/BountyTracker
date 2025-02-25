@@ -8,10 +8,18 @@ root, html, body {
   font-weight: bold;
 }
 
-.react-calendar-timeline {
-  touch-action: pan-y;
-  overscroll-behavior: contain;
+.timeline-container {
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+.react-calendar-timeline {
+  transform: translateZ(0);
+}
+
+.rct-scroll {
+  transform: translateZ(0);
 }
 
 .rct-calendar-header {
