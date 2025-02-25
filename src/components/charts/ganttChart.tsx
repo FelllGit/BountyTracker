@@ -104,10 +104,11 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
           canMove: false,
           canResize: false,
           canChangeGroup: false,
-          canSelect: false,
+          canSelect: true,
           itemProps: {
             style: {
               backgroundColor: groupColors[validatedGroupId],
+              selectedBgColor: groupColors[validatedGroupId],
               fontSize: isMobile ? "12px" : "14px",
               color: "white",
               borderRadius: "4px",
