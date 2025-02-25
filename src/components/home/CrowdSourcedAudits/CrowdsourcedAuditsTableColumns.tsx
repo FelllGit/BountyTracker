@@ -136,7 +136,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   },
   {
     accessorKey: "duration",
-    size: 100,
+    size: 200,
     header: ({ column }) => {
       return (
         <Button
@@ -154,7 +154,10 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
       const now = moment();
 
       const totalDays = endDate.diff(startDate, "days");
-      const daysLeft = Math.max(0, endDate.diff(now, "days"));
+      const daysLeft = Math.max(
+        0,
+        Math.min(totalDays, endDate.diff(now, "days"))
+      );
 
       return (
         <p>
