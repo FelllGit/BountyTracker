@@ -67,6 +67,7 @@ const CustomItemRenderer = ({
   return (
     <motion.div
       {...itemProps}
+      onClick={item.itemProps?.onClick}
       className={shouldAnimate ? "overflow-x-hidden !z-50" : "!z-50"}
       whileHover={
         groupName === "Cantina"
@@ -85,6 +86,7 @@ const CustomItemRenderer = ({
         className="custom-item-content"
         style={
           {
+            backgroundColor: `${item.itemProps?.style?.backgroundColor} !important`,
             maxHeight: `${itemContext.dimensions.height}px`,
             "--scroll-duration": scrollDuration,
           } as CustomCSSProperties
