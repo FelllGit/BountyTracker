@@ -104,8 +104,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
           canMove: false,
           canResize: false,
           canChangeGroup: false,
-          canSelect: true,
-          selectedBgColor: groupColors[validatedGroupId],
           itemProps: {
             style: {
               backgroundColor: groupColors[validatedGroupId],
@@ -114,14 +112,9 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
               borderRadius: "4px",
               cursor: "pointer",
               minHeight: "18px",
-              WebkitTapHighlightColor: "transparent",
-              outline: "none",
-              touchAction: "manipulation",
+              // overflow: "hidden",
             },
-            onClick: () => {
-              window.open(project.originalUrl, "_blank", "noopener,noreferrer");
-            },
-            onTouchEnd: () => {
+            onMouseDown: () => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
             },
           },

@@ -22,13 +22,7 @@ const CustomItemRenderer = ({
   groups,
 }: CustomItemRendererProps) => {
   const { left: leftResizeProps, right: rightResizeProps } = getResizeProps();
-  const baseStyle: React.CSSProperties =
-    (item.itemProps && item.itemProps.style) || {};
-  const customStyle: React.CSSProperties = {
-    ...baseStyle,
-    backgroundColor: baseStyle.backgroundColor,
-  };
-  const itemProps = getItemProps({ ...item.itemProps, style: customStyle });
+  const itemProps = getItemProps(item.itemProps ?? {});
   const textRef = useRef<HTMLDivElement>(null);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [scrollDuration, setScrollDuration] = useState("10s");
