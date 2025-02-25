@@ -8,6 +8,12 @@ root, html, body {
   font-weight: bold;
 }
 
+.react-calendar-timeline {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 .rct-calendar-header {
   border-color: hsl(var(--border)) !important;
 }
