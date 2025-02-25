@@ -136,6 +136,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
   },
   {
     accessorKey: "duration",
+    size: 100,
     header: ({ column }) => {
       return (
         <Button
