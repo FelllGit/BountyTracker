@@ -68,6 +68,7 @@ const CustomItemRenderer = ({
     <motion.div
       {...itemProps}
       onClick={item.itemProps?.onClick}
+      onTouchEnd={item.itemProps?.onTouchEnd}
       className={shouldAnimate ? "overflow-x-hidden !z-50" : "!z-50"}
       whileHover={
         groupName === "Cantina"
