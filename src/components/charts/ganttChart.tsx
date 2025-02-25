@@ -98,12 +98,13 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
         return {
           id: index + 1,
           group: validatedGroupId,
-          title: `${project.project} - $${project.maxReward} - ${project.languages.length > 0 ? project.languages.slice(0, 2).join(", ") : "null"} - Days left: ${Math.max(0, Math.min(moment(project.endDate).diff(moment(project.startDate), "days"), moment(project.endDate).diff(moment(), "days")))}`,
+          title: `${project.project} - $${project.maxReward} - ${project.languages && project.languages.length > 0 ? project.languages.slice(0, 2).join(", ") : "null"} - Days left: ${Math.max(0, Math.min(moment(project.endDate).diff(moment(project.startDate), "days"), moment(project.endDate).diff(moment(), "days")))}`,
           start_time: moment(project.startDate).valueOf(),
           end_time: moment(project.endDate).valueOf(),
           canMove: false,
           canResize: false,
           canChangeGroup: false,
+          itemTouchSendsClick: true,
           itemProps: {
             style: {
               backgroundColor: groupColors[validatedGroupId],
@@ -114,10 +115,10 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
               minHeight: "18px",
               overflow: "hidden",
             },
-            onMouseDown: () => {
+            onMouseDown: (): void => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
             },
-            onTouchStart: () => {
+            onTouchStart: (): void => {
               window.open(project.originalUrl, "_blank", "noopener,noreferrer");
             },
           },
