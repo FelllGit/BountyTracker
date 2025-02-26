@@ -16,10 +16,11 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Restore .env from GitHub Secrets
-        run: echo "$ENV_FILE" > .env
-        env:
-          ENV_FILE: ${{ secrets.ENV_FILE }}
+      - name: Create .env file
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" >> .env
+          echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
+          echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
 
       - name: Check for changes in package.json or package-lock.json
         id: check_changes
@@ -36,15 +37,6 @@ jobs:
           rm -rf node_modules package-lock.json
           npm cache clean --force
           npm install --legacy-peer-deps
-
-      - name: Verify installed dependencies
-        run: ls -lah node_modules/@/components/ui/ || echo "❌ Components not found"
-
-      - name: Set NODE_PATH
-        run: echo "NODE_PATH=./src" >> $GITHUB_ENV
-
-      - name: Clear Next.js cache
-        run: rm -rf .next/cache
 
       - name: Build the project
         run: |
