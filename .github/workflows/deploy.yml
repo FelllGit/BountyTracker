@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Restore .env from GitHub Secrets
         run: echo "$ENV_FILE" > .env
@@ -22,18 +24,20 @@ jobs:
       - name: Check for changes in package.json or package-lock.json
         id: check_changes
         run: |
-          if git diff --name-only HEAD^ HEAD | grep -qE 'package(-lock)?\.json'; then
+          if git diff --name-only HEAD~1 -- package.json package-lock.json | grep -qE 'package(-lock)?\.json'; then
             echo "RUN_NPM_INSTALL=true" >> $GITHUB_ENV
+          else
+            echo "RUN_NPM_INSTALL=false" >> $GITHUB_ENV
           fi
 
-      - name: Update npm dependencies (if required)
+      - name: Install dependencies (if required)
         if: env.RUN_NPM_INSTALL == 'true'
-        run: |
-          npm install
-          npm run build
+        run: npm install
 
       - name: Build the project
-        run: npm run build
+        run: |
+          export PATH="./node_modules/.bin:$PATH"
+          npx next build && npx next-nginx-routes
 
       - name: Copy files to /var/www/vigilseekFrontend/out
         run: sudo cp -R out/* /var/www/vigilseekFrontend/out/
