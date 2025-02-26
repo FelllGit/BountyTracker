@@ -69,7 +69,7 @@ const CustomItemRenderer = ({
       {...itemProps}
       onClick={item.itemProps?.onClick}
       onTouchEnd={item.itemProps?.onTouchEnd}
-      className={shouldAnimate ? "overflow-x-hidden !z-50" : "!z-50"}
+      className={shouldAnimate ? "overflow-x-hidden !z-[100]" : "!z-[100]"}
       whileHover={
         groupName === "Cantina"
           ? {
@@ -84,7 +84,7 @@ const CustomItemRenderer = ({
       {itemContext.useResizeHandle && <div {...leftResizeProps} />}
       <div
         ref={textRef}
-        className="custom-item-content"
+        className="custom-item-content !z-[100]"
         style={
           {
             backgroundColor: `${item.itemProps?.style?.backgroundColor} !important`,

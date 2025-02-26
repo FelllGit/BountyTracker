@@ -12,25 +12,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create .env file
+      - name: Створення .env файлу
         run: |
           echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" > .env
           echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
           echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
+      - name: Кешування npm та Next.js кешу збірки
+        uses: actions/cache@v4
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Install dependencies
+      - name: Перевстановлення залежностей (якщо потрібно)
         run: npm install --legacy-peer-deps
 
-      - name: Build the project
+      - name: Збірка проекту
         run: |
           export PATH="./node_modules/.bin:$PATH"
           npx next build && npx next-nginx-routes
 
-      - name: Copy files to /var/www/vigilseekFrontend/out
+      - name: Копіювання файлів у /var/www/vigilseekFrontend/out
         run: sudo cp -R out/* /var/www/vigilseekFrontend/out/
