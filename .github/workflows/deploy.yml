@@ -32,5 +32,9 @@ jobs:
           npm install
           npm run build
 
-      - name: Run deployment script
-        run: ./deploy.sh
+      - name: Grant execute permission to deploy.sh
+        run: chmod +x ./deploy.sh
+
+      - name: Deploy
+        run: sudo ./deploy.sh
+
