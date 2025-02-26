@@ -22,21 +22,8 @@ jobs:
           echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
           echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
 
-      - name: Check for changes in package.json or package-lock.json
-        id: check_changes
-        run: |
-          if git diff --name-only HEAD~1 -- package.json package-lock.json | grep -qE 'package(-lock)?\.json'; then
-            echo "RUN_NPM_INSTALL=true" >> $GITHUB_ENV
-          else
-            echo "RUN_NPM_INSTALL=false" >> $GITHUB_ENV
-          fi
-
-      - name: Reinstall dependencies (if required)
-        if: env.RUN_NPM_INSTALL == 'true'
-        run: |
-          rm -rf node_modules package-lock.json
-          npm cache clean --force
-          npm install --legacy-peer-deps
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
 
       - name: Build the project
         run: |
