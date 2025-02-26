@@ -16,14 +16,25 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Create .env file
+      - name: Debug GitHub Variables
         run: |
-          echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" >> .env
-          echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
-          echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
+          echo "Backend: ${{ vars.NEXT_PUBLIC_BACKEND_URL }}"
+          echo "TG: ${{ vars.NEXT_PUBLIC_TG_URL }}"
+          echo "X: ${{ vars.NEXT_PUBLIC_X_URL }}"
+
+      - name: Create .env file
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ vars.NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_TG_URL: ${{ vars.NEXT_PUBLIC_TG_URL }}
+          NEXT_PUBLIC_X_URL: ${{ vars.NEXT_PUBLIC_X_URL }}
+        run: |
+          echo "NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL" >> .env
+          echo "NEXT_PUBLIC_TG_URL=$NEXT_PUBLIC_TG_URL" >> .env
+          echo "NEXT_PUBLIC_X_URL=$NEXT_PUBLIC_X_URL" >> .env
 
       - name: Debug .env
-        run: cat .env
+        run: cat .env  # Видали після тесту!
+
 
 #      - name: Reinstall dependencies (if required)
 #        run: |
