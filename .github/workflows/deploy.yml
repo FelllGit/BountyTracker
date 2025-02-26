@@ -12,13 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Створення .env файлу
+      - name: Create .env file
         run: |
           echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" > .env
           echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
           echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
 
-      - name: Кешування npm та Next.js кешу збірки
+      - name: Cache npm and Next.js build cache
         uses: actions/cache@v4
         with:
           path: |
@@ -28,13 +28,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Перевстановлення залежностей (якщо потрібно)
+      - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Збірка проекту
+      - name: Build project
         run: |
           export PATH="./node_modules/.bin:$PATH"
           npx next build && npx next-nginx-routes
 
-      - name: Копіювання файлів у /var/www/vigilseekFrontend/out
+      - name: Copy files to /var/www/vigilseekFrontend/out
         run: sudo cp -R out/* /var/www/vigilseekFrontend/out/
