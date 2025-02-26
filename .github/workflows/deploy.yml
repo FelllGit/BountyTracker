@@ -9,19 +9,23 @@ jobs:
   deploy:
     if: github.event.pull_request.merged == true
     runs-on: self-hosted
-
     steps:
+      - uses: actions/checkout@v4
+
       - name: Create .env file
         run: |
-          echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" >> .env
+          echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" > .env
           echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
           echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
 
-      - name: Reinstall dependencies (if required)
-        run: |
-          rm -rf node_modules package-lock.json
-          npm cache clean --force
-          npm install --legacy-peer-deps
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
 
       - name: Build the project
         run: |
