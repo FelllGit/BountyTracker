@@ -30,9 +30,17 @@ jobs:
             echo "RUN_NPM_INSTALL=false" >> $GITHUB_ENV
           fi
 
-      - name: Install dependencies (if required)
+      - name: Reinstall dependencies (if required)
         if: env.RUN_NPM_INSTALL == 'true'
-        run: npm install
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+
+      - name: Verify installed dependencies
+        run: ls -lah node_modules/@/components/ui/ || echo "Components not found"
+
+      - name: Set NODE_PATH
+        run: echo "NODE_PATH=./src" >> $GITHUB_ENV
 
       - name: Build the project
         run: |
