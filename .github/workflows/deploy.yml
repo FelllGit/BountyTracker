@@ -11,29 +11,26 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # Завантажуємо два останніх коміти для перевірки змін
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
+      - name: Restore .env from GitHub Secrets
+        run: echo "$ENV_FILE" > .env
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
 
-      - name: Check if package.json or package-lock.json changed
-        id: check-files
+      - name: Check for changes in package.json or package-lock.json
+        id: check_changes
         run: |
-          if git diff --name-only HEAD^ HEAD -- package.json package-lock.json | grep -qE 'package(-lock)?\.json'; then
+          if git diff --name-only HEAD^ HEAD | grep -qE 'package(-lock)?\.json'; then
             echo "RUN_NPM_INSTALL=true" >> $GITHUB_ENV
-          else
-            echo "RUN_NPM_INSTALL=false" >> $GITHUB_ENV
           fi
 
-      - name: Install dependencies (if needed)
+      - name: Update npm dependencies (if required)
         if: env.RUN_NPM_INSTALL == 'true'
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      - name: Deploy
-        run: sudo ./deploy.sh
+      - name: Run deployment script
+        run: ./deploy.sh
