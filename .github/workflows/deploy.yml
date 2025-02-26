@@ -1,0 +1,29 @@
+name: Deploy on PR merge to main
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy
+        run: sudo ./deploy.sh

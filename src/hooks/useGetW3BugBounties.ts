@@ -46,7 +46,11 @@ const fetchW3BugBounties = async (
     );
   }
 
-  return response.json();
+  const data: BugBounty[] = await response.json();
+  const today: Date = new Date();
+  return data.filter(
+    (bug: BugBounty): boolean => new Date(bug.startDate) <= today
+  );
 };
 
 export const useGetW3BugBounties = (
