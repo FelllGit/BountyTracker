@@ -32,9 +32,20 @@ jobs:
           npm install
           npm run build
 
-      - name: Grant execute permission to deploy.sh
-        run: chmod +x ./deploy.sh
+      - name: Build the project
+        run: npm run build
 
-      - name: Deploy
-        run: sudo ./deploy.sh
+      - name: Copy files to /var/www/vigilseekFrontend/out
+        run: sudo cp -R out/* /var/www/vigilseekFrontend/out/
 
+      - name: Set permissions for Nginx
+        run: |
+          sudo chown -R www-data:www-data /var/www/vigilseekFrontend/out
+          sudo find /var/www/vigilseekFrontend/out -type d -exec chmod 755 {} \;
+          sudo find /var/www/vigilseekFrontend/out -type f -exec chmod 644 {} \;
+
+      - name: Restart Nginx
+        run: sudo systemctl restart nginx
+
+      - name: Deployment completed
+        run: echo "✅ Deployment completed successfully!"
