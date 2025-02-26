@@ -11,42 +11,34 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
       - name: Create .env file
         run: |
           echo "NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}" >> .env
           echo "NEXT_PUBLIC_TG_URL=${{ vars.NEXT_PUBLIC_TG_URL }}" >> .env
           echo "NEXT_PUBLIC_X_URL=${{ vars.NEXT_PUBLIC_X_URL }}" >> .env
 
-      - name: Debug .env
-        run: cat .env
+      - name: Reinstall dependencies (if required)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          npm install --legacy-peer-deps
 
-#      - name: Reinstall dependencies (if required)
-#        run: |
-#          rm -rf node_modules package-lock.json
-#          npm cache clean --force
-#          npm install --legacy-peer-deps
-#
-#      - name: Build the project
-#        run: |
-#          export PATH="./node_modules/.bin:$PATH"
-#          npx next build && npx next-nginx-routes
-#
-#      - name: Copy files to /var/www/vigilseekFrontend/out
-#        run: sudo cp -R out/* /var/www/vigilseekFrontend/out/
-#
-#      - name: Set permissions for Nginx
-#        run: |
-#          sudo chown -R www-data:www-data /var/www/vigilseekFrontend/out
-#          sudo find /var/www/vigilseekFrontend/out -type d -exec chmod 755 {} \;
-#          sudo find /var/www/vigilseekFrontend/out -type f -exec chmod 644 {} \;
-#
-#      - name: Restart Nginx
-#        run: sudo systemctl restart nginx
-#
-#      - name: Deployment completed
-#        run: echo "✅ Deployment completed successfully!"
+      - name: Build the project
+        run: |
+          export PATH="./node_modules/.bin:$PATH"
+          npx next build && npx next-nginx-routes
+
+      - name: Copy files to /var/www/vigilseekFrontend/out
+        run: sudo cp -R out/* /var/www/vigilseekFrontend/out/
+
+      - name: Set permissions for Nginx
+        run: |
+          sudo chown -R www-data:www-data /var/www/vigilseekFrontend/out
+          sudo find /var/www/vigilseekFrontend/out -type d -exec chmod 755 {} \;
+          sudo find /var/www/vigilseekFrontend/out -type f -exec chmod 644 {} \;
+
+      - name: Restart Nginx
+        run: sudo systemctl restart nginx
+
+      - name: Deployment completed
+        run: echo "✅ Deployment completed successfully!"
