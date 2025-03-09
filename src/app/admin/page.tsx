@@ -20,6 +20,10 @@ export default function AdminPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    setPassword(localStorage.getItem("admin-password") ?? "");
+  }, []);
+
   const handlePasswordSubmit = async () => {
     const result = await useLogin(password);
 

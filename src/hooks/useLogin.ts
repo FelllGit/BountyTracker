@@ -14,7 +14,7 @@ export const useLogin = async (password: string) => {
       withCredentials: true,
     });
 
-    sessionStorage.setItem("admin-password", password);
+    localStorage.setItem("admin-password", password);
 
     return { success: true, data: response.data };
   } catch (error) {
