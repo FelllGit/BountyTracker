@@ -18,11 +18,12 @@ import { useLogin } from "@/hooks/useLogin";
 export default function AdminPage() {
   const [isOpened, setIsOpened] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [password, setPassword] = useState(localStorage.getItem("admin-password") ?? "");
+  const [password, setPassword] = useState(
+    localStorage.getItem("admin-password") ?? ""
+  );
 
   const handlePasswordSubmit = async () => {
     const result = await useLogin(password);
-
     if (result.success) {
       setIsOpened(false);
       setIsSuccess(true);
