@@ -15,7 +15,7 @@ export const usePatchBugBountyLanguages = () => {
 
   return useMutation<void, Error, PatchBugBountyVariables>({
     mutationFn: async ({ id, languages }: PatchBugBountyVariables) => {
-      const authPassword = sessionStorage.getItem("admin-password");
+      const authPassword = localStorage.getItem("admin-password");
 
       await axios.put(
         `${url}/${id}/languages`,
