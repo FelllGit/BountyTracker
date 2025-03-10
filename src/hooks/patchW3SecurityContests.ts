@@ -15,7 +15,7 @@ export const usePatchSecurityContestLanguages = () => {
 
   return useMutation<void, Error, PatchSecurityContestVariables>({
     mutationFn: async ({ id, languages }: PatchSecurityContestVariables) => {
-      const authPassword = sessionStorage.getItem("admin-password");
+      const authPassword = localStorage.getItem("admin-password");
 
       await axios.put(
         `${url}/${id}/languages`,
