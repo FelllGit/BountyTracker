@@ -109,7 +109,7 @@ const fetchW3SecurityContests = async (
       imageUrl:
         "https://imagedelivery.net/wtv4_V7VzVsxpAFaxzmpbw/8d6965f0-dd45-4838-2799-68bee7693600/public",
       maxReward: 2000000,
-      languages: [],
+      languages: ["Rust", "Go", "Java"],
       rewardsPool: 2000000,
       rewardsToken: "USDC",
       startDate: "2025-02-21T20:00:00.000Z",
