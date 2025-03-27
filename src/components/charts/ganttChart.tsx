@@ -74,7 +74,11 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
   }, []);
 
   if (!projectsData || !platformColors) {
-    return <div className="h-24 text-sm text-center">Loading...</div>;
+    return (
+      <div className="h-24 text-sm text-center text-card-foreground">
+        Loading...
+      </div>
+    );
   }
 
   const groupColors: Record<number, string> = groups.reduce(
