@@ -106,21 +106,22 @@ export function AmountByPlatformBB() {
 
   const totalTimeValue = useMemo((): number => {
     if (!chartData || chartData.length === 0) return 0;
-
     let total = 0;
     chartData.forEach((platformData) => {
-      platformData.data.forEach(({ value }) => {
-        total += value;
-      });
+      if (platformData.data && platformData.data.length > 0) {
+        const lastEntry = platformData.data[platformData.data.length - 1];
+        total += lastEntry.value;
+      }
     });
-
     return total;
   }, [chartData]);
 
   return (
     <Card className="dark:bg-[#30302E] flex flex-col">
       <CardHeader>
-        <CardTitle className="mb-2">Contest Amount Rate By Platform</CardTitle>
+        <CardTitle className="mb-2">
+          Bug Bounty Amount Rate By Platform
+        </CardTitle>
         <CardDescription className="flex gap-2 overflow-y-scroll">
           <Button
             variant={activeFilter === "All" ? "default" : "secondary"}
