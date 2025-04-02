@@ -6,7 +6,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { getEnumColors } from "@/utils/getColor";
 import { useEffect, useMemo, useState } from "react";
@@ -46,12 +45,29 @@ export interface StatsChartProps<T extends string> {
   xValues?: string[];
   yAxisName?: string;
   tickInterval?: number;
-  aggregationMode?: 'month' | 'quarter' | 'year';
+  aggregationMode?: "month" | "quarter" | "year";
   useLogScale?: boolean;
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+    name: string;
+    dataKey: string;
+    // Add other properties that might be in your payload
+  }>;
+  label?: string;
+  chartConfig: ChartConfig;
+}
+
 // Custom tooltip component that shows all platforms with zeros for missing data
-const CustomTooltipContent = ({ active, payload, label, chartConfig }: any) => {
+const CustomTooltipContent = ({
+  active,
+  payload,
+  label,
+  chartConfig,
+}: CustomTooltipProps) => {
   if (!active || !payload || !payload.length) {
     return null;
   }
@@ -61,15 +77,15 @@ const CustomTooltipContent = ({ active, payload, label, chartConfig }: any) => {
 
   // Create a map of platforms to their values from the payload
   const valueMap: Record<string, number> = {};
-  payload.forEach((entry: any) => {
+  payload.forEach((entry) => {
     valueMap[entry.name] = entry.value || 0;
   });
 
   // Create a complete list of platforms with values (including zeros)
-  const completeList = allPlatforms.map(platform => ({
+  const completeList = allPlatforms.map((platform) => ({
     name: platform,
     value: valueMap[platform] || 0,
-    color: chartConfig[platform]?.color || "#888888"
+    color: chartConfig[platform]?.color || "#888888",
   }));
 
   // Sort by value (highest first)
@@ -98,35 +114,31 @@ const CustomTooltipContent = ({ active, payload, label, chartConfig }: any) => {
 export function StatsChart<T extends string>({
   data,
   xAxisKey = "month",
-  xValues,
   yAxisName = "Value",
-  tickInterval = 50000,
-  aggregationMode = 'month',
-}: StatsChartProps<T>): JSX.Element | null {
+  aggregationMode = "month",
+}: StatsChartProps<T>): JSX.Element {
   // Format date based on aggregation mode
   const formatDate = (dateStr: string): string => {
     try {
       const d = new Date(dateStr);
 
-      if (aggregationMode === 'month') {
+      if (aggregationMode === "month") {
         return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}`;
-      } else if (aggregationMode === 'quarter') {
+      } else if (aggregationMode === "quarter") {
         const quarter = Math.floor(d.getMonth() / 3) + 1;
         return `${d.getFullYear()}.Q${quarter}`;
-      } else { // year
+      } else {
+        // year
         return `${d.getFullYear()}`;
       }
-    } catch (e) {
-      console.error("Error formatting date:", dateStr);
+    } catch (error) {
+      console.error("Error formatting date:", dateStr, error);
       return dateStr;
     }
   };
 
   // Use useMemo for dataKeys stability
-  const dataKeys = useMemo(() =>
-    data.map((item) => item.name),
-    [data]
-  );
+  const dataKeys = useMemo(() => data.map((item) => item.name), [data]);
 
   const [colors, setColors] = useState<Record<string, string>>({});
   const [chartConfig, setChartConfig] = useState<ChartConfig>({});
@@ -169,9 +181,9 @@ export function StatsChart<T extends string>({
 
     let earliest = new Date().toISOString(); // Start with current date
 
-    data.forEach(series => {
+    data.forEach((series) => {
       if (series.data && series.data.length > 0) {
-        series.data.forEach(point => {
+        series.data.forEach((point) => {
           if (point.date < earliest) {
             earliest = point.date;
           }
@@ -193,34 +205,39 @@ export function StatsChart<T extends string>({
     try {
       const result: AggregatedSeries<T>[] = [];
 
-      data.forEach(series => {
+      data.forEach((series) => {
         // Skip series with no data
         if (!series.data || series.data.length === 0) {
           console.log(`Series ${series.name} has no data`);
           return;
         }
 
-        console.log(`Processing series ${series.name} with ${series.data.length} data points`);
+        console.log(
+          `Processing series ${series.name} with ${series.data.length} data points`
+        );
 
         // Group data points by formatted date
         const groupedData: Record<string, number> = {};
 
-        series.data.forEach(point => {
+        series.data.forEach((point) => {
           const formattedDate = formatDate(point.date);
-          groupedData[formattedDate] = (groupedData[formattedDate] || 0) + point.value;
+          groupedData[formattedDate] =
+            (groupedData[formattedDate] || 0) + point.value;
         });
 
         // Convert grouped data back to array format
-        const aggregatedPoints: AggregatedDataPoint[] = Object.entries(groupedData).map(([date, value]) => ({
+        const aggregatedPoints: AggregatedDataPoint[] = Object.entries(
+          groupedData
+        ).map(([date, value]) => ({
           date,
-          value
+          value,
         }));
 
         // Only add series if it has data points
         if (aggregatedPoints.length > 0) {
           result.push({
             name: series.name,
-            data: aggregatedPoints
+            data: aggregatedPoints,
           });
         }
       });
@@ -228,11 +245,15 @@ export function StatsChart<T extends string>({
       console.log(`Aggregated ${result.length} series with data`);
 
       // Debug each series
-      result.forEach(series => {
+      result.forEach((series) => {
         console.log(`${series.name}: ${series.data.length} aggregated points`);
         if (series.data.length > 0) {
-          console.log(`  Sample point: ${series.data[0].date} = ${series.data[0].value}`);
-          console.log(`  Max value: ${Math.max(...series.data.map(p => p.value))}`);
+          console.log(
+            `  Sample point: ${series.data[0].date} = ${series.data[0].value}`
+          );
+          console.log(
+            `  Max value: ${Math.max(...series.data.map((p) => p.value))}`
+          );
         }
       });
 
@@ -258,9 +279,9 @@ export function StatsChart<T extends string>({
       // Ensure we have complete continuous date range from earliest date
       // We need to expand our earliest date detection to include raw date strings
       let rawEarliestDate = "";
-      data.forEach(series => {
+      data.forEach((series) => {
         if (series.data && series.data.length > 0) {
-          series.data.forEach(point => {
+          series.data.forEach((point) => {
             if (!rawEarliestDate || point.date < rawEarliestDate) {
               rawEarliestDate = point.date;
             }
@@ -276,9 +297,9 @@ export function StatsChart<T extends string>({
         let latestMoment = new Date();
 
         // Find the latest date in the data
-        data.forEach(series => {
+        data.forEach((series) => {
           if (series.data && series.data.length > 0) {
-            series.data.forEach(point => {
+            series.data.forEach((point) => {
               const pointDate = new Date(point.date);
               if (pointDate > latestMoment) {
                 latestMoment = pointDate;
@@ -294,18 +315,19 @@ export function StatsChart<T extends string>({
           timePointsSet.add(formattedDate);
 
           // Increment based on aggregation mode
-          if (aggregationMode === 'month') {
+          if (aggregationMode === "month") {
             current.setMonth(current.getMonth() + 1);
-          } else if (aggregationMode === 'quarter') {
+          } else if (aggregationMode === "quarter") {
             current.setMonth(current.getMonth() + 3);
-          } else { // year
+          } else {
+            // year
             current.setFullYear(current.getFullYear() + 1);
           }
         }
       }
 
       // Also add any existing dates from the aggregated data to ensure we don't miss any
-      aggregatedData.forEach(series => {
+      aggregatedData.forEach((series) => {
         series.data.forEach((point: AggregatedDataPoint) => {
           timePointsSet.add(point.date);
         });
@@ -313,14 +335,18 @@ export function StatsChart<T extends string>({
 
       // Sort time points
       const timePoints = Array.from(timePointsSet).sort();
-      console.log(`Found ${timePoints.length} unique time points from ${timePoints[0]} to ${timePoints[timePoints.length - 1]}`);
+      console.log(
+        `Found ${timePoints.length} unique time points from ${timePoints[0]} to ${timePoints[timePoints.length - 1]}`
+      );
 
       // Create chart data points
-      const result: ChartDataPoint[] = timePoints.map(timePoint => {
+      const result: ChartDataPoint[] = timePoints.map((timePoint) => {
         const dataPoint: ChartDataPoint = { [xAxisKey]: timePoint };
 
-        aggregatedData.forEach(series => {
-          const matchingPoint = series.data.find((point: AggregatedDataPoint) => point.date === timePoint);
+        aggregatedData.forEach((series) => {
+          const matchingPoint = series.data.find(
+            (point: AggregatedDataPoint) => point.date === timePoint
+          );
           dataPoint[series.name] = matchingPoint ? matchingPoint.value : 0;
         });
 
@@ -333,7 +359,7 @@ export function StatsChart<T extends string>({
       if (result.length > 0) {
         const firstPoint = result[0];
         console.log("First chart data point:", firstPoint);
-        aggregatedData.forEach(series => {
+        aggregatedData.forEach((series) => {
           console.log(`  ${series.name} value: ${firstPoint[series.name]}`);
         });
       }
@@ -348,13 +374,14 @@ export function StatsChart<T extends string>({
 
   // Find min and max values for proper scaling
   const valueRange = useMemo(() => {
-    if (!aggregatedData || aggregatedData.length === 0) return { min: 0, max: 1000000 };
+    if (!aggregatedData || aggregatedData.length === 0)
+      return { min: 0, max: 1000000 };
 
     try {
       let min = Infinity;
       let max = -Infinity;
 
-      aggregatedData.forEach(series => {
+      aggregatedData.forEach((series) => {
         series.data.forEach((point: AggregatedDataPoint) => {
           // Consider all values, including zeros
           if (point.value < min) min = point.value;
@@ -386,7 +413,7 @@ export function StatsChart<T extends string>({
     const tickCount = 5;
 
     for (let i = 0; i <= tickCount; i++) {
-      ticks.push(Math.round(max * i / tickCount));
+      ticks.push(Math.round((max * i) / tickCount));
     }
 
     return ticks;
@@ -425,7 +452,7 @@ export function StatsChart<T extends string>({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            scale='linear'
+            scale="linear"
             domain={[0, valueRange.max]}
             ticks={yAxisTicks}
             allowDataOverflow={false}

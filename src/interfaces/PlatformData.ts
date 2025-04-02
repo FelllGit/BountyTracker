@@ -5,4 +5,3 @@ export type PlatformData<T extends Record<string, string>> = {
     value: number;
   }[];
 };
-

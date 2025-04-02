@@ -39,7 +39,6 @@ export function AmountByPlatform() {
         item && item.name && Array.isArray(item.data) && item.data.length > 0
     );
 
-    const platformNames = validData.map((item) => item.name);
     const typedData = validData as unknown as TimeSeriesData<EPlatformName>[];
 
     if (activeFilter === "All") {

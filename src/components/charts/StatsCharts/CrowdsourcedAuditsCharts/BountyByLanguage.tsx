@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import {
   StatsChart,
   TimeSeriesData,
@@ -39,7 +39,6 @@ export function BountyByLanguage() {
         item && item.name && Array.isArray(item.data) && item.data.length > 0
     );
 
-    const platformNames = validData.map((item) => item.name);
     const typedData = validData as unknown as TimeSeriesData<ELanguagesNames>[];
 
     if (activeFilter === "All") {
