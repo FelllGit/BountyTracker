@@ -3,4 +3,5 @@ export enum ELanguagesNames {
   Rust = "Rust",
   Move = "Move",
   Cairo = "Cairo",
+  Other = "Other",
 }

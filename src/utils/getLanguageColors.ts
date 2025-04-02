@@ -8,6 +8,7 @@ const getPlatformColors = (): Record<ELanguagesNames, string> => {
       [ELanguagesNames.Move]: "#CCCCCC",
       [ELanguagesNames.Solidity]: "#CCCCCC",
       [ELanguagesNames.Rust]: "#CCCCCC",
+      [ELanguagesNames.Other]: "#CCCCCC",
     };
   }
 
@@ -18,6 +19,7 @@ const getPlatformColors = (): Record<ELanguagesNames, string> => {
     [ELanguagesNames.Move]: styles.getPropertyValue("--move").trim(),
     [ELanguagesNames.Solidity]: styles.getPropertyValue("--solidity").trim(),
     [ELanguagesNames.Rust]: styles.getPropertyValue("--rust").trim(),
+    [ELanguagesNames.Other]: "#CCCCCC",
   };
 };
 

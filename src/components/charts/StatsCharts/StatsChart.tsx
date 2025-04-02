@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/chart";
 import { getEnumColors } from "@/utils/getColor";
 import { useEffect, useMemo, useState } from "react";
+import { formatValue } from "@/utils/formatValue";
+import image from "./../../../media/img/VigilSeek_logo.png";
 
 type ChartDataPoint = {
   [key: string]: string | number;
@@ -67,29 +69,28 @@ const CustomTooltipContent = ({
   payload,
   label,
   chartConfig,
-}: CustomTooltipProps) => {
-  if (!active || !payload || !payload.length) {
+}: CustomTooltipProps): JSX.Element | null => {
+  if (!active || !payload || payload.length === 0) {
     return null;
   }
 
-  // Get all platform names from chartConfig
-  const allPlatforms = Object.keys(chartConfig || {});
-
-  // Create a map of platforms to their values from the payload
+  const allPlatforms: string[] = Object.keys(chartConfig || {});
   const valueMap: Record<string, number> = {};
   payload.forEach((entry) => {
     valueMap[entry.name] = entry.value || 0;
   });
 
-  // Create a complete list of platforms with values (including zeros)
   const completeList = allPlatforms.map((platform) => ({
     name: platform,
     value: valueMap[platform] || 0,
     color: chartConfig[platform]?.color || "#888888",
   }));
 
-  // Sort by value (highest first)
   completeList.sort((a, b) => b.value - a.value);
+  const total: number = completeList.reduce(
+    (sum, entry) => sum + entry.value,
+    0
+  );
 
   return (
     <div className="rounded-md border bg-background p-2 shadow-md">
@@ -106,6 +107,12 @@ const CustomTooltipContent = ({
             </span>
           </div>
         ))}
+        <div className="flex items-center py-1">
+          <div className="mr-2 h-2 w-2 rounded-full" />
+          <span className="truncate text-sm">
+            Total - {total.toLocaleString()}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -432,7 +439,28 @@ export function StatsChart<T extends string>({
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
+      <div className="absolute top-1/3 right-1/2 pointer-events-none flex items-center justify-center scale-[0.5] md:scale-100 dark:invert">
+        <div className="absolute pointer-events-none flex items-center justify-center z-10">
+          <div className="flex items-center max-w-[800px] w-full">
+            <div className="relative w-[60px] h-[60px]">
+              <img
+                src={image.src}
+                alt="VigilSeek Logo"
+                className="object-cover"
+                style={{ width: "60px", height: "60px", opacity: 0.3 }}
+                sizes="60px"
+              />
+            </div>
+            <span
+              className="text-4xl font-bold -ml-2 text-gray-600"
+              style={{ opacity: 0.3 }}
+            >
+              VigilSeek
+            </span>
+          </div>
+        </div>
+      </div>
       <ChartContainer config={chartConfig} className="h-full w-full">
         <AreaChart
           data={chartData}
@@ -456,6 +484,7 @@ export function StatsChart<T extends string>({
             domain={[0, valueRange.max]}
             ticks={yAxisTicks}
             allowDataOverflow={false}
+            tickFormatter={(tick) => formatValue(tick)}
           />
           <ChartTooltip
             cursor
