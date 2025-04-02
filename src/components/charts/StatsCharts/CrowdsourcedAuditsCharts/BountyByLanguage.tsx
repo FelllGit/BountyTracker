@@ -42,11 +42,11 @@ export function BountyByLanguage() {
   } = useGetW3SecurityContestsRewardByLanguage();
 
   const chartData = useMemo((): TimeSeriesData<ELanguagesNames>[] => {
-    if (!rawData || !Array.isArray(rawData)) {
+    if (!rawData?.data || !Array.isArray(rawData.data)) {
       return [];
     }
 
-    const validData = rawData.filter(
+    const validData = rawData.data.filter(
       (item) =>
         item && item.name && Array.isArray(item.data) && item.data.length > 0
     );
@@ -114,19 +114,6 @@ export function BountyByLanguage() {
 
     if (beforePreviousTotal === 0) return null;
     return ((previousTotal - beforePreviousTotal) / beforePreviousTotal) * 100;
-  }, [chartData]);
-
-  const totalTimeValue = useMemo((): number => {
-    if (!chartData || chartData.length === 0) return 0;
-
-    let total = 0;
-    chartData.forEach((platformData) => {
-      platformData.data.forEach(({ value }) => {
-        total += value;
-      });
-    });
-
-    return total;
   }, [chartData]);
 
   const isMobile = useMediaQuery({ maxWidth: 600 });
@@ -225,7 +212,7 @@ export function BountyByLanguage() {
               Total Contest Value
             </span>
             <span className="flex items-center gap-2 leading-none text-muted-foreground">
-              {numeral(totalTimeValue).format("$0.00a")}
+              {numeral(rawData?.total ?? 0).format("$0.00a")}
             </span>
           </div>
         </div>
