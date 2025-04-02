@@ -10,7 +10,6 @@ const getPlatformColors = (): Record<EPlatformName, string> => {
       [EPlatformName.Immunefi]: "#CCCCCC",
       [EPlatformName.Sherlock]: "#CCCCCC",
       [EPlatformName.code4rena]: "#CCCCCC",
-      [EPlatformName.HatsFinance]: "#CCCCCC",
     };
   }
 
@@ -25,9 +24,6 @@ const getPlatformColors = (): Record<EPlatformName, string> => {
     [EPlatformName.Immunefi]: styles.getPropertyValue("--immunefi").trim(),
     [EPlatformName.Sherlock]: styles.getPropertyValue("--sherlock").trim(),
     [EPlatformName.code4rena]: styles.getPropertyValue("--code4rena").trim(),
-    [EPlatformName.HatsFinance]: styles
-      .getPropertyValue("--hatsFinance")
-      .trim(),
   };
 };
 
