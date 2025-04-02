@@ -218,7 +218,7 @@ const CrowdsourcedAuditsTable = () => {
         displayedData.length < projectsData.length && (
           <div
             ref={loader}
-            className="h-10 w-full flex items-center justify-center"
+            className="h-10 w-full flex items-center justify-center text-card-foreground"
           >
             <p>Loading more...</p>
           </div>
