@@ -12,7 +12,8 @@ import "react-calendar-timeline/lib/Timeline.css";
 import { CrowdsourcedAudit } from "@/interfaces/CrowdsourcedAudit";
 import { useMediaQuery } from "react-responsive";
 import CustomItemRenderer from "@/components/charts/customItemRenderer";
-import { useEffect, useState } from "react";
+import getPlatformColors from "@/utils/getPlatformColors";
+import { EPlatformName } from "@/interfaces/PlatformNames";
 
 interface IGanttChartProps {
   projectsData: CrowdsourcedAudit[] | undefined;
@@ -21,12 +22,10 @@ interface IGanttChartProps {
 }
 
 const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
-  const [platformColors, setPlatformColors] = useState<Record<string, string>>(
-    {}
-  );
-
   const isMobile = useMediaQuery({ maxWidth: 600 });
   const isTablet = useMediaQuery({ minWidth: 600, maxWidth: 1024 });
+
+  const platformColors: Record<string, string> = getPlatformColors();
 
   const sidebarWidth = isMobile ? 80 : isTablet ? 100 : 150;
 
@@ -36,42 +35,26 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
     .subtract(1, "week")
     .add(isMobile ? -15 : isTablet ? 5 : 10, "days");
 
-  const allPlatforms =
-    projectsData &&
-    projectsData.reduce<string[]>((acc, curr) => [...acc, curr.platform], []);
+  const allPlatforms: EPlatformName[] =
+    projectsData?.map((p) => p.platform as EPlatformName) ?? [];
 
   const uniquePlatforms = Array.from(new Set(allPlatforms));
-  const groups = uniquePlatforms.map((platform, index) => ({
-    id: index + 1,
-    title: platform,
-    rightTitle: "Platform",
-    stackItems: true,
-  })) as TimelineGroupBase[];
+  const groups: TimelineGroupBase[] = uniquePlatforms.map(
+    (platform, index) => ({
+      id: index + 1,
+      title: platform,
+      rightTitle: "Platform",
+      stackItems: true,
+    })
+  );
 
-  const updateColors = () => {
-    const styles = getComputedStyle(document.documentElement);
-    setPlatformColors({
-      HackenProof: styles.getPropertyValue("--hackenProof").trim(),
-      Cantina: styles.getPropertyValue("--cantina").trim(),
-      Immunefi: styles.getPropertyValue("--immunefi").trim(),
-      Sherlock: styles.getPropertyValue("--sherlock").trim(),
-      code4rena: styles.getPropertyValue("--code4rena").trim(),
-      CodeHawks: styles.getPropertyValue("--codeHawks").trim(),
-      HatsFinance: styles.getPropertyValue("--hatsFinance").trim(),
-    });
-  };
-
-  useEffect(() => {
-    updateColors();
-
-    const observer = new MutationObserver(updateColors);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const groupColors: Record<number, string> = groups.reduce<
+    Record<number, string>
+  >((acc, group) => {
+    acc[group.id as number] =
+      platformColors[group.title as EPlatformName] ?? "#CCCCCC";
+    return acc;
+  }, {});
 
   if (!projectsData || !platformColors) {
     return (
@@ -80,16 +63,6 @@ const GanttChart: React.FC<IGanttChartProps> = ({ projectsData }) => {
       </div>
     );
   }
-
-  const groupColors: Record<number, string> = groups.reduce(
-    (acc: Record<number, string>, group: TimelineGroupBase) => {
-      if (typeof group.id === "number" && typeof group.title === "string") {
-        acc[group.id] = platformColors[group.title] || "#CCCCCC";
-      }
-      return acc;
-    },
-    {}
-  );
 
   const items: TimelineItemBase<number>[] = projectsData
     ? projectsData.map((project, index) => {

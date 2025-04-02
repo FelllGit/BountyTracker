@@ -45,8 +45,14 @@ body {
     --code4rena: #7549FF;
     --codeHawks: #Ef5B69;
     --hatsFinance: #24E7C5;
+    --remedy: #87ED80;
+    --solidity: #8F8DE0;
+    --move: #bda0cb;
+    --rust: #F74C01;
+    --cairo: #fe49a3;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 200, 6%, 10%;
     --foreground: 0 0% 98%;
@@ -79,6 +85,11 @@ body {
     --code4rena: #2700A0;
     --codeHawks: #910E1B;
     --hatsFinance: #24E7C5;
+    --remedy: #6cbd66;
+    --solidity: #7570A8;
+    --move: #744d87;
+    --rust: #c53c00;
+    --cairo: #cb3a82;
   }
 }
 
@@ -86,29 +97,11 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
-
-
-/*@media only screen and (max-width: 600px) {*/
-/*  .rct-header-root > div:first-child {*/
-/*    display: none !important;*/
-/*  }*/
-
-/*  .rct-calendar-header {*/
-/*    width: 100% !important;*/
-/*  }*/
-
-/*  .rct-sidebar {*/
-/*    display: none !important;*/
-/*  }*/
-
-/*  .rct-scroll {*/
-/*    width: 100% !important;*/
-/*  }*/
-/*}*/
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
