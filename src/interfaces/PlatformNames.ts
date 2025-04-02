@@ -5,5 +5,4 @@ export enum EPlatformName {
   Sherlock = "Sherlock",
   code4rena = "code4rena",
   CodeHawks = "CodeHawks",
-  HatsFinance = "HatsFinance",
 }
