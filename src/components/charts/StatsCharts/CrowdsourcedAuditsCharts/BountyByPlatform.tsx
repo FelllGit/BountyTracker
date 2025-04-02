@@ -1,5 +1,11 @@
 "use client";
-import { CircleX, LoaderCircle, TrendingDown, TrendingUp } from "lucide-react";
+import {
+  CircleX,
+  Info,
+  LoaderCircle,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -17,6 +23,12 @@ import {
 import { EPlatformName } from "@/interfaces/PlatformNames";
 import { useGetW3SecurityContestsRewardByPlatform } from "@/hooks/useGetRewardByPlatform";
 import numeral from "numeral";
+import { useMediaQuery } from "react-responsive";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export function BountyByPlatform() {
   const [activeFilter, setActiveFilter] = useState<EPlatformName | "All">(
@@ -117,10 +129,27 @@ export function BountyByPlatform() {
     return total;
   }, [chartData]);
 
+  const isMobile = useMediaQuery({ maxWidth: 600 });
+
   return (
     <Card className="dark:bg-[#30302E] flex flex-col">
       <CardHeader>
-        <CardTitle className="mb-2">Contest Reward Rate By Platform</CardTitle>
+        <CardTitle className="mb-2 flex gap-2">
+          Contest Reward Rate By Platform
+          <HoverCard>
+            <HoverCardTrigger>
+              <Info size={15} />
+            </HoverCardTrigger>
+            <HoverCardContent
+              side={isMobile ? "bottom" : "right"}
+              className={`rounded-xl text-sm bg-transparent backdrop-blur-xl ${isMobile ? "mr-4" : "mt-20"}`}
+            >
+              This metric sums the reward pools of all contests active during
+              the month. If a contest spans multiple months, its reward is
+              included each month it remains active.
+            </HoverCardContent>
+          </HoverCard>
+        </CardTitle>
         <CardDescription className="flex gap-2 overflow-y-scroll">
           <Button
             variant={activeFilter === "All" ? "default" : "secondary"}
