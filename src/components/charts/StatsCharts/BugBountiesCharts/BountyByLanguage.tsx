@@ -8,45 +8,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
-import {
-  StatsChart,
-  TimeSeriesData,
-} from "@/components/charts/StatsCharts/StatsChart";
+import { StatsChart } from "@/components/charts/StatsCharts/StatsChart";
 import { ELanguagesNames } from "@/interfaces/LanguagesNames";
 import { useGetW3SecurityContestsRewardByLanguageBB } from "@/hooks/useGetRewardByLanguageBB";
 import numeral from "numeral";
+import { processTimeSeriesData } from "@/utils/processTimeSeriesData";
+import { ChartFilters } from "@/components/charts/StatsCharts/FilteredChartCard";
 
 export function BountyByLanguageBB() {
-  const [activeFilter, setActiveFilter] = useState<ELanguagesNames | "All">(
-    "All"
-  );
-  const languages = Object.values(ELanguagesNames);
+  const [activeFilters, setActiveFilters] = useState<
+    (ELanguagesNames | "All")[]
+  >(["All"]);
   const {
     data: rawData,
     isLoading,
     isError,
   } = useGetW3SecurityContestsRewardByLanguageBB();
 
-  const chartData = useMemo((): TimeSeriesData<ELanguagesNames>[] => {
-    if (!rawData || !Array.isArray(rawData)) {
-      return [];
-    }
-
-    const validData = rawData.filter(
-      (item) =>
-        item && item.name && Array.isArray(item.data) && item.data.length > 0
-    );
-
-    const typedData = validData as unknown as TimeSeriesData<ELanguagesNames>[];
-
-    if (activeFilter === "All") {
-      return typedData;
-    }
-
-    return typedData.filter((item) => item.name === activeFilter);
-  }, [rawData, activeFilter]);
+  const chartData = useMemo(
+    () => processTimeSeriesData(rawData, activeFilters),
+    [rawData, activeFilters]
+  );
 
   const chartContainerStyle = {
     height: "300px",
@@ -122,22 +105,12 @@ export function BountyByLanguageBB() {
         <CardTitle className="mb-2">
           Bug Bounty Reward Rate By Language
         </CardTitle>
-        <CardDescription className="flex gap-2 overflow-y-scroll">
-          <Button
-            variant={activeFilter === "All" ? "default" : "secondary"}
-            onClick={() => setActiveFilter("All")}
-          >
-            All
-          </Button>
-          {languages.map((lang) => (
-            <Button
-              key={lang}
-              variant={activeFilter === lang ? "default" : "secondary"}
-              onClick={() => setActiveFilter(lang)}
-            >
-              {lang}
-            </Button>
-          ))}
+        <CardDescription>
+          <ChartFilters
+            filters={Object.values(ELanguagesNames)}
+            activeFilters={activeFilters}
+            setActiveFilters={setActiveFilters}
+          />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1">

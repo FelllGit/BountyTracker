@@ -8,45 +8,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
-import {
-  StatsChart,
-  TimeSeriesData,
-} from "@/components/charts/StatsCharts/StatsChart";
-import { EBBPlatformName } from "@/interfaces/BBPlatformNames";
+import { StatsChart } from "@/components/charts/StatsCharts/StatsChart";
 import { useGetW3SecurityContestsAmountByPlatformBB } from "@/hooks/useGetAmountByPlatformBB";
 import { formatValue } from "@/utils/formatValue";
+import { ChartFilters } from "@/components/charts/StatsCharts/FilteredChartCard";
+import { processTimeSeriesData } from "@/utils/processTimeSeriesData";
+import { EBBPlatformName } from "@/interfaces/BBPlatformNames";
 
 export function AmountByPlatformBB() {
-  const [activeFilter, setActiveFilter] = useState<EBBPlatformName | "All">(
-    "All"
-  );
-  const languages = Object.values(EBBPlatformName);
+  const [activeFilters, setActiveFilters] = useState<
+    (EBBPlatformName | "All")[]
+  >(["All"]);
+
   const {
     data: rawData,
     isLoading,
     isError,
   } = useGetW3SecurityContestsAmountByPlatformBB();
 
-  const chartData = useMemo((): TimeSeriesData<EBBPlatformName>[] => {
-    if (!rawData || !Array.isArray(rawData)) {
-      return [];
-    }
-
-    const validData = rawData.filter(
-      (item) =>
-        item && item.name && Array.isArray(item.data) && item.data.length > 0
-    );
-
-    const typedData = validData as unknown as TimeSeriesData<EBBPlatformName>[];
-
-    if (activeFilter === "All") {
-      return typedData;
-    }
-
-    return typedData.filter((item) => item.name === activeFilter);
-  }, [rawData, activeFilter]);
+  const chartData = useMemo(
+    () => processTimeSeriesData(rawData, activeFilters),
+    [rawData, activeFilters]
+  );
 
   const chartContainerStyle = {
     height: "300px",
@@ -122,22 +106,12 @@ export function AmountByPlatformBB() {
         <CardTitle className="mb-2">
           Bug Bounty Amount Rate By Platform
         </CardTitle>
-        <CardDescription className="flex gap-2 overflow-y-scroll">
-          <Button
-            variant={activeFilter === "All" ? "default" : "secondary"}
-            onClick={() => setActiveFilter("All")}
-          >
-            All
-          </Button>
-          {languages.map((lang) => (
-            <Button
-              key={lang}
-              variant={activeFilter === lang ? "default" : "secondary"}
-              onClick={() => setActiveFilter(lang)}
-            >
-              {lang}
-            </Button>
-          ))}
+        <CardDescription>
+          <ChartFilters
+            filters={Object.values(EBBPlatformName)}
+            activeFilters={activeFilters}
+            setActiveFilters={setActiveFilters}
+          />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1">
