@@ -126,7 +126,9 @@ export function AmountByLanguage() {
       return rawData.total.reduce((sum, item) => sum + (item.number || 0), 0);
     } else {
       // Інакше знаходимо значення для вибраної мови
-      const totalForLanguage = rawData.total.find(item => item.name === activeFilter);
+      const totalForLanguage = rawData.total.find(
+        (item) => item.name === activeFilter
+      );
       return totalForLanguage ? totalForLanguage.number : 0;
     }
   }, [rawData, activeFilter]);
