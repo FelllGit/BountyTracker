@@ -13,6 +13,9 @@ export type SecurityContestData<T extends Record<string, string>> = {
       date: string;
       value: number;
     }[];
-  };
-  total: number;
+  }[];
+  total: {
+    name: T[keyof T];
+    number: number;
+  }[];
 };

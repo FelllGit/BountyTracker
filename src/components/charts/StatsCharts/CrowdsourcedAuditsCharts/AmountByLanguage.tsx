@@ -116,6 +116,21 @@ export function AmountByLanguage() {
     return ((previousTotal - beforePreviousTotal) / beforePreviousTotal) * 100;
   }, [chartData]);
 
+  const totalAmount = useMemo(() => {
+    if (!rawData?.total || !Array.isArray(rawData.total)) {
+      return 0;
+    }
+
+    if (activeFilter === "All") {
+      // Якщо вибрано "All", сумуємо всі значення
+      return rawData.total.reduce((sum, item) => sum + (item.number || 0), 0);
+    } else {
+      // Інакше знаходимо значення для вибраної мови
+      const totalForLanguage = rawData.total.find(item => item.name === activeFilter);
+      return totalForLanguage ? totalForLanguage.number : 0;
+    }
+  }, [rawData, activeFilter]);
+
   const isMobile = useMediaQuery({ maxWidth: 600 });
 
   return (
@@ -212,7 +227,7 @@ export function AmountByLanguage() {
               Total Contest Amount
             </span>
             <span className="flex items-center gap-2 leading-none text-muted-foreground">
-              {formatValue(rawData?.total ?? 0)}
+              {formatValue(totalAmount)}
             </span>
           </div>
         </div>
