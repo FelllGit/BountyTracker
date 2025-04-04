@@ -69,6 +69,13 @@ const DesktopNavigation = () => {
         >
           Bug Bounty Programs
         </Button>
+        <Button
+          variant="secondary"
+          className="font-bold"
+          onClick={() => router.push("/charts")}
+        >
+          Charts
+        </Button>
       </div>
 
       <div className="flex gap-4">
