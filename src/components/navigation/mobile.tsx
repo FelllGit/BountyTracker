@@ -105,6 +105,13 @@ const MobileNavigation = () => {
               >
                 Bug Bounty Programs
               </Button>
+              <Button
+                variant="secondary"
+                className="font-bold"
+                onClick={() => handleRouter("/charts")}
+              >
+                Charts
+              </Button>
             </div>
 
             <div className="flex flex-col gap-4">
