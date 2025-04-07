@@ -3,4 +3,5 @@ export enum EBBPlatformName {
   HackenProof = "HackenProof",
   Immunefi = "Immunefi",
   Remedy = "Remedy",
+  Sherlock = "Sherlock",
 }
