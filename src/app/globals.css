@@ -50,6 +50,7 @@ body {
     --move: #bda0cb;
     --rust: #F74C01;
     --cairo: #fe49a3;
+    --go: #78D0DE;
     --radius: 0.5rem;
   }
 
@@ -90,6 +91,7 @@ body {
     --move: #744d87;
     --rust: #c53c00;
     --cairo: #cb3a82;
+    --go: #60A6B1;
   }
 }
 
