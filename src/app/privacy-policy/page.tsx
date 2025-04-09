@@ -202,9 +202,9 @@ const PrivacyPolicy: FC = (): JSX.Element => {
         To exercise your rights, contact us at:{" "}
         <a
           className="text-blue-600 dark:text-blue-300 underline"
-          href="mailto:contact@vigilseek.com"
+          href="mailto:elembounty@gmail.com"
         >
-          contact@vigilseek.com
+          elembounty@gmail.com
         </a>
       </p>
       <h2 className="text-2xl font-semibold mt-8 mb-4">Cookies</h2>
@@ -232,9 +232,9 @@ const PrivacyPolicy: FC = (): JSX.Element => {
         <br />
         <a
           className="text-blue-600 dark:text-blue-300 underline"
-          href="mailto:contact@vigilseek.com"
+          href="mailto:elembounty@gmail.com"
         >
-          contact@vigilseek.com
+          elembounty@gmail.com
         </a>
       </p>
     </div>

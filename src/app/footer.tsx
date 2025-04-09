@@ -1,23 +1,18 @@
-import { Button } from "@/components/ui/button";
+// eslint-disable-next-line no-restricted-imports
+import Link from "next/link";
 
 const Footer = () => {
   return (
     <footer className="flex items-center justify-around px-10 py-6 border-t-2">
-      <Button variant="ghost" className="text-lg">
-        About Us
-      </Button>
-      <Button variant="ghost" className="text-lg">
+      <Link href="/privacy-policy" className="text-lg">
         Private Policy
-      </Button>
-      <Button variant="ghost" className="text-lg">
+      </Link>
+      <Link href="/terms-conditions" className="text-lg">
         Terms of Service
-      </Button>
-      <Button variant="ghost" className="text-lg">
-        Help/FAQ
-      </Button>
-      <Button variant="ghost" className="text-lg">
-        Contact US
-      </Button>
+      </Link>
+      <Link href="https://x.com/lmanualm" target="_blank" className="text-lg">
+        Contact us
+      </Link>
     </footer>
   );
 };
