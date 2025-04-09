@@ -115,9 +115,9 @@ const TermsConditions: FC = (): JSX.Element => {
         </span>{" "}
         <a
           className="text-blue-600 dark:text-blue-300 underline"
-          href="mailto:contact@vigilseek.com"
+          href="mailto:elembounty@gmail.com"
         >
-          contact@vigilseek.com
+          elembounty@gmail.com
         </a>
       </p>
     </div>

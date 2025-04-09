@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "./app.css";
 import Header from "@/app/header";
-// import Footer from "@/app/footer";
+import Footer from "@/app/footer";
 import { Providers } from "@/app/providers";
 import "./app.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -67,7 +67,7 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster />
-          {/*<Footer />*/}
+          <Footer />
         </Providers>
       </body>
     </html>
