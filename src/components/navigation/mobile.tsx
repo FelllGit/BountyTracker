@@ -118,6 +118,15 @@ const MobileNavigation = () => {
               {/*<Button variant="secondary" className="font-bold">*/}
               {/*  Email Subscription*/}
               {/*</Button>*/}
+              <Button
+                className="font-bold text-black dark:text-white bg-[#E5E5E5] hover:bg-[#CCCCCC] dark:bg-primary dark:hover:bg-primary/80"
+                asChild
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <a href="#support">Support Development</a>
+              </Button>
               {jwt ? (
                 <Button
                   variant="secondary"

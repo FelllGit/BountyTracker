@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ImTelegram } from "react-icons/im";
-import { BsTwitterX } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -14,8 +12,6 @@ import { CustomJwtPayload } from "@/interfaces/CustomJwtPayload";
 
 const DesktopNavigation = () => {
   const router = useRouter();
-  const tgUrl = process.env.NEXT_PUBLIC_TG_URL;
-  const xUrl = process.env.NEXT_PUBLIC_X_URL;
 
   const { theme, toggleTheme } = useTheme();
 
@@ -90,28 +86,10 @@ const DesktopNavigation = () => {
         </div>
         <Separator orientation="vertical" />
         <Button
-          variant="ghost"
-          className="font-bold text-3xl"
-          onClick={() => {
-            const newWindow = window.open(tgUrl);
-            if (newWindow) {
-              newWindow.focus();
-            }
-          }}
+          className="font-bold text-black dark:text-white bg-[#E5E5E5] hover:bg-[#CCCCCC] dark:bg-primary dark:hover:bg-primary/80"
+          asChild
         >
-          <ImTelegram />
-        </Button>
-        <Button
-          variant="ghost"
-          className="font-bold text-3xl"
-          onClick={() => {
-            const newWindow = window.open(xUrl);
-            if (newWindow) {
-              newWindow.focus();
-            }
-          }}
-        >
-          <BsTwitterX />
+          <a href="#support">Support Development</a>
         </Button>
         <Separator orientation="vertical" />
         {jwt ? (
