@@ -34,7 +34,7 @@ const Footer = () => {
         </span>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col">
-            ETH / ERC-20 (Polygon, Arbitrum, etc.):
+            USDC / ERC-20 (Polygon, Arbitrum, etc.):
             <Button
               variant="ghost"
               onClick={copyEthErc20}
