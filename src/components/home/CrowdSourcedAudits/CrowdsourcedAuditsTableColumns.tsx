@@ -198,16 +198,32 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
       );
     },
     cell: ({ row }) => {
-      const amount = row.getValue("maxReward") as number | null; // враховуємо можливість null
+      const amount = row.getValue("maxReward") as number | null;
+      const paid = row.original.paid as number | null;
       return (
         <div className="font-medium">
-          $
-          {amount !== null
-            ? amount.toLocaleString("en-US", {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })
-            : "N/A"}{" "}
+          <span>
+            Max: $
+            {amount !== null
+              ? amount.toLocaleString("en-US", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })
+              : "N/A"}
+          </span>
+          {paid !== null && paid > 0 && (
+            <>
+              <br />
+              <span className="ml-2">
+                (Paid: $
+                {paid.toLocaleString("en-US", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+                )
+              </span>
+            </>
+          )}
         </div>
       );
     },
