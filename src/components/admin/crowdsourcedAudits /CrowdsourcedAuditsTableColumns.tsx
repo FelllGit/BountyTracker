@@ -6,7 +6,8 @@ import Image from "next/image";
 import { BugBounty } from "@/interfaces/BugBounty";
 import { AuditStatus } from "@/interfaces/CrowdsourcedAudit";
 import { useState } from "react";
-import { usePatchSecurityContestLanguages } from "@/hooks/patchW3SecurityContests";
+import { usePatchSecurityContestLanguages } from "@/hooks/patchW3SecurityContestsLanguages";
+import { usePatchSecurityContestPaids } from "@/hooks/patchW3SecurityContestsPaids";
 
 export const adminCrowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
   {
@@ -235,6 +236,93 @@ export const adminCrowdsourcedAuditsTableColumns: ColumnDef<BugBounty>[] = [
               })
             : "N/A"}{" "}
           {/* Відображаємо "N/A", якщо значення відсутнє */}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "paid",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Paid
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const [isEditing, setIsEditing] = useState(false);
+      const [editedPaid, setEditedPaid] = useState<number | "">(
+        row.getValue("paid") ?? ""
+      );
+      const updatePaid = usePatchSecurityContestPaids();
+
+      const handleSave = async () => {
+        try {
+          await updatePaid.mutateAsync({
+            id: row.original.id,
+            paid: typeof editedPaid === "number" ? editedPaid : 0,
+          });
+          setIsEditing(false);
+        } catch (error) {
+          console.error("Failed to update paid:", error);
+        }
+      };
+
+      if (isEditing) {
+        return (
+          <div className="flex flex-col gap-2">
+            <input
+              type="number"
+              value={editedPaid}
+              onChange={(e) =>
+                setEditedPaid(
+                  e.target.value === "" ? "" : Number(e.target.value)
+                )
+              }
+              className="w-full p-1 border rounded"
+              min={0}
+            />
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                onClick={handleSave}
+                disabled={updatePaid.isPending}
+              >
+                Save
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setEditedPaid(row.getValue("paid") ?? "");
+                  setIsEditing(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        );
+      }
+
+      const paid = row.getValue("paid") as number | null | undefined;
+      return (
+        <div
+          className="font-medium cursor-pointer min-w-4 min-h-6"
+          onClick={() => setIsEditing(true)}
+          title="Click to edit"
+        >
+          $
+          {paid !== null && paid !== undefined
+            ? paid.toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+            : "N/A"}
         </div>
       );
     },

@@ -8,6 +8,7 @@ export interface CrowdsourcedAudit {
   languages: string[];
   maxReward: number;
   rewardsPool: number;
+  paid: number;
   rewardsToken: string;
   startDate: string;
   endDate: string;
