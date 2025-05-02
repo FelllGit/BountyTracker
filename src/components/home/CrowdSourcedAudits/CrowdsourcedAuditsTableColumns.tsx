@@ -192,7 +192,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Max Reward
+          Prize Pool
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -214,7 +214,7 @@ export const crowdsourcedAuditsTableColumns: ColumnDef<CrowdsourcedAudit>[] = [
           {paid !== null && paid > 0 && (
             <>
               <br />
-              <span className="ml-2">
+              <span>
                 (Paid: $
                 {paid.toLocaleString("en-US", {
                   minimumFractionDigits: 0,
